@@ -1,0 +1,32 @@
+{
+    "name": "thes01/lilypond-renderer-client",
+    "description": "Laravel package for easy the Lilypond renderer client",
+    "authors": [
+        {
+            "name": "Miroslav Sery",
+            "email": "athes01@gmail.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.2",
+        "guzzlehttp/guzzle": "^6.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.7",
+        "phpunit/phpunit": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "ProScholy\\LilypondRenderer\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ProScholy\\LilypondRenderer\\LilypondRendererServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability":"dev"
+}
