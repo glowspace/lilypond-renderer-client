@@ -5,7 +5,7 @@ use ProScholy\LilypondRenderer\Client;
 
 class LilypondRendererClientTest extends TestCase
 {
-    protected $client;
+    protected Client $client;
 
     protected function getPackageProviders($app)
     {
@@ -19,217 +19,101 @@ class LilypondRendererClientTest extends TestCase
         $this->client = new Client();
     }
 
-    public function testApiToken()
+    public function testBasicLilypond()
     {
-        $this->assertEquals(config('bohemia_erp.api_token'),
-            $this->client->get('api/token-echo'));
-    }
+        $res = $this->client->renderSvg('{ c }');
 
-    public function testUser()
-    {
-        $us = $this->client->get('api/check');
+        $this->assertIsArray($res);
+        $this->assertTrue(count($res) == 1);
+        $this->assertIsObject($res[0]);
+        $this->assertObjectHasAttribute('name', $res[0]);
+        $this->assertIsString($res[0]->name);
+        $this->assertObjectHasAttribute('contents', $res[0]);
+        $this->assertIsArray($res[0]->contents);
 
-        $this->assertEquals($us->id, 1);
-    }
-
-    public function testStoreOrder()
-    {
-        $o = new Order([
-            'title' => 'Order 1',
-            'invoicing_model' => 1,
-            'renewable' => 0,
-            'renew_unit' => 'month', 
-            'renew_amount' => 1,
-            'currency' => 'czk'
-        ]);
-
-        $res = $this->client->storeOrder($o, 1, 1);
-
-        $this->assertEquals($res->description, "Order 1");
-
-        return $res->id;
-    }
-
-    public function testStoreOrderBadCurrency()
-    {
-        $o = new Order([
-            'title' => 'Order 1',
-            'invoicing_model' => 1,
-            'renewable' => 0,
-            'renew_unit' => 'month', 
-            'renew_amount' => 1,
-            'currency' => 'abc'
-        ]);
-
-        $this->expectException(Exception::class);
-        $res = $this->client->storeOrder($o, 1, 1);
+        return $res;
     }
 
     /**
-     * @depends testStoreOrder
+     * @depends testBasicLilypond
      */
-    public function testConfirmOrder($order_id)
+    public function testLilypondSuccess($res)
     {
-        $confirmed = $this->client->confirmStagingOrder($order_id);
-        $this->assertEquals(1, $confirmed->status);
-
-        $this->assertAttributeNotEmpty('invoices', $confirmed);
-
-        return $confirmed;
-    }
-
-    public function testStoreOrderNotToBeConfirmed()
-    {
-        $o = new Order([
-            'title' => 'Order unconfirmed',
-            'invoicing_model' => 1,
-            'renewable' => 0,
-            'renew_unit' => 'month', 
-            'renew_amount' => 1,
-            'currency' => 'czk'
-        ]);
-
-        $res = $this->client->storeOrder($o, 1, 1);
-
-        $this->assertEquals($res->description, "Order unconfirmed");
-
-        return $res->id;
-    }
-
-    public function testStoreOrderNonExistingCompany()
-    {
-        $o = new Order([
-            'title' => 'Order 1',
-            'invoicing_model' => 1,
-            'renewable' => 0,
-            'renew_unit' => 'month', 
-            'renew_amount' => 1,
-            'currency' => 'czk'
-        ]);
-
-        $this->expectException(ERPApiException::class);
-        $res = $this->client->storeOrder($o, 1234, 1);
-
-        return $res->id;
+        $this->assertTrue($this->client->isRenderSuccessful($res));
     }
 
     /**
-     * @depends testStoreOrder
+     * @depends testBasicLilypond
      */
-    public function testGetOrder($order_id)
+    public function testLilypondGetSvg($res)
     {
-        $this->assertEquals($order_id, $this->client->getOrder($order_id)->id);
-    }
+        $svg = $this->client->getSvgCrop($res);
 
-    public function testCreateRecipient()
-    {
-        $r = new Recipient([
-            'name' => 'Miroslav',
-            'surname' => 'Sery',
-            'type' => 0
-        ]);
-
-        $recipient = $this->client->createRecipient($r, 1);
-        $this->assertEquals(1, $recipient->contractor_id);
-
-        return $recipient;
-    }
-
-    public function testCreateRecipientUnsuccessful()
-    {
-        $r = new Recipient([
-            'name' => 'Miroslav',
-            'surname' => 'Sery',
-            'type' => 0
-        ]);
-
-        $this->expectException(Exception::class);
-        $recipient = $this->client->createRecipient($r, 2); // 2 has only read permissions
+        $this->assertIsString($svg);
+        $this->assertStringContainsString('<svg', $svg);
     }
     
     /**
-     * @depends testCreateRecipient
+     * @depends testBasicLilypond
      */
-    public function testUpdateRecipient($recipient)
+    public function testLilypondGetLog($res)
     {
-        $r = new Recipient([
-            'type' => 1
-        ]);
+        $log = $this->client->getLog($res);
 
-        $updated = $this->client->updateRecipient($r, $recipient->id, 1);
-
-        $this->assertEquals(1, $updated->type);
+        $this->assertIsString($log);
+        $this->assertStringContainsString('Success: compilation successfully completed', $log);
     }
 
     /**
-     * @depends testStoreOrder
+     * @depends testBasicLilypond
      */
-    public function testStoreOrderItem($order_id)
+    public function testDeleteResult($res)
     {
-        $oitem = new OrderItem([
-            'code' => 'abcdefgh',
-            'description' => 'order item 1',
-            'price' => 101,
-            'vat_rate' => 21,
-            'is_price_with_vat' => true
-        ]);
+        $deleted = $this->client->deleteResult($res);
 
-        $order_item = $this->client->storeOrderItem($oitem, $order_id);
-        $this->assertEquals($order_id, $order_item->order_id);
-
-        return $order_id;
+        $this->assertTrue($deleted);
+        return $res;
     }
 
     /**
-     * @depends testStoreOrderNotToBeConfirmed
+     * @depends testDeleteResult
      */
-    public function testStoreOrderItem2($order_id)
+    public function testDeleteDeletedResult($res)
     {
-        $oitem = new OrderItem([
-            'code' => 'abcdefgh',
-            'description' => 'order item 1',
-            'price' => 100,
-            'vat_rate' => 21
-        ]);
+        $deleted = $this->client->deleteResult($res);
 
-        $order_item = $this->client->storeOrderItem($oitem, $order_id);
-        $this->assertEquals($order_id, $order_item->order_id);
-
-        return $order_id;
+        $this->assertFalse($deleted);
     }
 
-    /** 
-     * @depends testStoreOrderItem
-     */
-    public function testGetOrderItems($order_id)
+    public function testDeleteNonExistentDir()
     {
-        $order_items = $this->client->getOrderItems($order_id);
+        $fakeDir = new stdClass();
+        $fakeDir->name = "your_mama";
 
-        $this->assertTrue($order_items[0]->order_id == $order_id);
+        $deleted = $this->client->deleteResult([$fakeDir]);
+
+        $this->assertFalse($deleted);
     }
 
-    /**
-     * @depends testConfirmOrder
-     */
-    public function testStoreTransaction($confirmed)
+
+    // MALFORMED LILYPOND SRC
+
+    public function testLilypondErr()
     {
-        $amount = 101;
+        $res = $this->client->renderSvg('{ c ');
 
-        $resp = $this->client->storeTransaction(Transaction::TYPE_MANUAL_BANK_TRANSFER, $amount, $confirmed->id, 1);
-
-        $this->assertEquals(101, $resp->amount);
-
-        return $confirmed;
+        $this->assertFalse($this->client->isRenderSuccessful($res));
+        return $res;
     }
 
     /**
-     * @depends testStoreTransaction
+     * @depends testLilypondErr
      */
-    public function testGetInvoiceFile($confirmed)
+    public function testLilypondErrorLog($res)
     {
-        $file = $this->client->getInvoiceFile($confirmed->invoices[0]->id);
+        $log = $this->client->getLog($res);
 
-        $this->assertTrue($file instanceof \GuzzleHttp\Psr7\Stream);
-    }   
-
+        $this->assertIsString($log);
+        $this->assertStringContainsString('fatal error: failed files: "score.ly"', $log);
+    }
 }

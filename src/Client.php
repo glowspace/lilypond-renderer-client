@@ -3,17 +3,17 @@
 namespace ProScholy\LilypondRenderer;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\ClientException;
+// use GuzzleHttp\Exception\RequestException;
+// use GuzzleHttp\Exception\ClientException;
 
-use ProScholy\LilypondRenderer\Models\Order;
-use ProScholy\LilypondRenderer\Models\OrderItem;
-use ProScholy\LilypondRenderer\Models\Recipient;
+// use ProScholy\LilypondRenderer\Models\Order;
+// use ProScholy\LilypondRenderer\Models\OrderItem;
+// use ProScholy\LilypondRenderer\Models\Recipient;
 
-use Exception;
+// use Exception;
 
-use ProScholy\LilypondRenderer\Exceptions\ERPApiException;
-use ProScholy\LilypondRenderer\Models\Transaction;
+// use ProScholy\LilypondRenderer\Exceptions\ERPApiException;
+// use ProScholy\LilypondRenderer\Models\Transaction;
 
 class Client
 {
@@ -43,7 +43,7 @@ class Client
     //     return json_decode($response->getBody()->getContents());
     // }
 
-    public function makeSvg($lilypond_src)
+    public function renderSvg($lilypond_src)
     {
         $response = $this->client->post('make?recipe=svgcrop', [
             'multipart' => [
@@ -58,20 +58,41 @@ class Client
         return json_decode($response->getBody()->getContents());
     }
 
+    public function isRenderSuccessful($result)
+    {
+        foreach ($result[0]->contents as $file) {
+            if ($file->name == 'score_cropped.svg') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getProcessedFile($tmp, $filename)
     {
         $response = $this->client->get("get?dir=$tmp&file=$filename");
 
-        return $response;
+        return $response->getBody()->getContents();
     }
 
-    public function getSvgCrop($tmp)
+    public function getSvgCrop($res)
     {
-        return $this->getProcessedFile($tmp, 'score_cropped.ly');
+        $tmp = $res[0]->name;
+        return $this->getProcessedFile($tmp, 'score_cropped.svg');
     }
 
-    public function getLog($tmp)
+    public function getLog($res)
     {
-        return $this->getProcessedFile($tmp, 'score.log');
+        $tmp = $res[0]->name;
+        return $this->getProcessedFile($tmp, 'log.txt');
+    }
+
+    public function deleteResult($res)
+    {
+        $tmp = $res[0]->name;
+        $response = $this->client->get("del?dir=$tmp");
+
+        return $response->getBody()->getContents() == "ok\n";
     }
 }
