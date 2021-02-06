@@ -1,5 +1,5 @@
 {
-    "name": "thes01/lilypond-renderer-client",
+    "name": "proscholy/lilypond-renderer-client",
     "description": "Laravel package for easy the Lilypond renderer client",
     "authors": [
         {
