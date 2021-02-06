@@ -1,6 +1,6 @@
 {
     "name": "proscholy/lilypond-renderer-client",
-    "description": "Laravel package for easy the Lilypond renderer client",
+    "description": "Laravel package providing a PHP client for the Lilypond renderer server",
     "authors": [
         {
             "name": "Miroslav Sery",
