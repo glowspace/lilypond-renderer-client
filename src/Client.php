@@ -3,17 +3,10 @@
 namespace ProScholy\LilypondRenderer;
 
 use GuzzleHttp\Client as HttpClient;
-// use GuzzleHttp\Exception\RequestException;
-// use GuzzleHttp\Exception\ClientException;
+// // use GuzzleHttp\Exception\RequestException;
+// // use GuzzleHttp\Exception\ClientException;
 
-// use ProScholy\LilypondRenderer\Models\Order;
-// use ProScholy\LilypondRenderer\Models\OrderItem;
-// use ProScholy\LilypondRenderer\Models\Recipient;
-
-// use Exception;
-
-// use ProScholy\LilypondRenderer\Exceptions\ERPApiException;
-// use ProScholy\LilypondRenderer\Models\Transaction;
+use Exception;
 
 class Client
 {
@@ -26,73 +19,78 @@ class Client
         ]);
     }
 
-    // private function request(string $method, string $endPoint, array $params = [])
-    // {
-    //     try {
-    //         $response = $this->client->request($method, $endPoint, $params);
-    //     } catch (RequestException $ex) {
-    //         $resp = $ex->getResponse();
-    //         $data = json_decode($resp->getBody()->getContents());
-
-    //         throw new ERPApiException($data->status . ' (' . $resp->getStatusCode() . ')', $resp->getStatusCode());
-    //     }
-
-    //     // other possible exceptions: GuzzleHttp\Exception\ServerException (504: timed out)
-    //     // but those should be catched in the app...I guess? 
-
-    //     return json_decode($response->getBody()->getContents());
-    // }
-
-    public function renderSvg($lilypond_src)
+    public function render($lilypond_src, $recipe) : RenderResult
     {
-        $response = $this->client->post('make?recipe=svgcrop', [
+        // todo: catch exceptions 
+
+        $response = $this->client->post("make?recipe=$recipe", [
             'multipart' => [
                 [
                     'name'     => 'file_lilypond', // input name, needs to stay the same
-                    'contents' => $lilypond_src,
+                    'contents' => (string)$lilypond_src,
                     'filename' => 'score.ly' // doesn't matter
                 ]
             ]
         ]);
 
-        return json_decode($response->getBody()->getContents());
+        return new RenderResult($recipe, json_decode($response->getBody()->getContents()));
     }
 
-    public function isRenderSuccessful($result)
+    public function renderSvg($lilypond_src, $crop = true) : RenderResult
     {
-        foreach ($result[0]->contents as $file) {
-            if ($file->name == 'score_cropped.svg') {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->render($lilypond_src, $crop ? 'svgcrop' : 'svg');
     }
 
-    public function getProcessedFile($tmp, $filename)
+    public function getProcessedFile($tmp, $filename) : string
     {
         $response = $this->client->get("get?dir=$tmp&file=$filename");
 
         return $response->getBody()->getContents();
     }
 
-    public function getSvgCrop($res)
+    public function getResultLog(RenderResult $res) : string
     {
-        $tmp = $res[0]->name;
-        return $this->getProcessedFile($tmp, 'score_cropped.svg');
+        return $this->getProcessedFile($res->getTmp(), 'log.txt');
     }
 
-    public function getLog($res)
+    public function getResultOutputFile(RenderResult $res) : string
     {
-        $tmp = $res[0]->name;
-        return $this->getProcessedFile($tmp, 'log.txt');
+        if (!$res->isSuccessful()) {
+            throw new Exception("The result was unsuccessful, cannot get the final output file.");
+        }
+
+        return $this->getProcessedFile($res->getTmp(), $res->getRecipeOutputFile());
     }
 
-    public function deleteResult($res)
+    public function deleteResult(RenderResult $res) : bool
     {
-        $tmp = $res[0]->name;
+        $tmp = $res->getTmp();
         $response = $this->client->get("del?dir=$tmp");
 
-        return $response->getBody()->getContents() == "ok\n";
+        $success = $response->getBody()->getContents() == "ok\n";
+
+        if ($success) {
+            $res->markAsDeleted();
+        }
+
+        return $success;
     }
 }
+
+
+//     // private function request(string $method, string $endPoint, array $params = [])
+//     // {
+//     //     try {
+//     //         $response = $this->client->request($method, $endPoint, $params);
+//     //     } catch (RequestException $ex) {
+//     //         $resp = $ex->getResponse();
+//     //         $data = json_decode($resp->getBody()->getContents());
+
+//     //         throw new ERPApiException($data->status . ' (' . $resp->getStatusCode() . ')', $resp->getStatusCode());
+//     //     }
+
+//     //     // other possible exceptions: GuzzleHttp\Exception\ServerException (504: timed out)
+//     //     // but those should be catched in the app...I guess? 
+
+//     //     return json_decode($response->getBody()->getContents());
+//     // }

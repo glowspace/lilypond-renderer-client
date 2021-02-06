@@ -2,6 +2,8 @@
 
 use Orchestra\Testbench\TestCase;
 use ProScholy\LilypondRenderer\Client;
+use ProScholy\LilypondRenderer\RenderResult;
+use ProScholy\LilypondRenderer\LilypondSrc;
 
 class LilypondRendererClientTest extends TestCase
 {
@@ -23,13 +25,8 @@ class LilypondRendererClientTest extends TestCase
     {
         $res = $this->client->renderSvg('{ c }');
 
-        $this->assertIsArray($res);
-        $this->assertTrue(count($res) == 1);
-        $this->assertIsObject($res[0]);
-        $this->assertObjectHasAttribute('name', $res[0]);
-        $this->assertIsString($res[0]->name);
-        $this->assertObjectHasAttribute('contents', $res[0]);
-        $this->assertIsArray($res[0]->contents);
+        $this->assertIsString($res->getTmp());
+        $this->assertIsArray($res->getContents());
 
         return $res;
     }
@@ -39,7 +36,7 @@ class LilypondRendererClientTest extends TestCase
      */
     public function testLilypondSuccess($res)
     {
-        $this->assertTrue($this->client->isRenderSuccessful($res));
+        $this->assertTrue($res->isSuccessful());
     }
 
     /**
@@ -47,7 +44,7 @@ class LilypondRendererClientTest extends TestCase
      */
     public function testLilypondGetSvg($res)
     {
-        $svg = $this->client->getSvgCrop($res);
+        $svg = $this->client->getResultOutputFile($res);
 
         $this->assertIsString($svg);
         $this->assertStringContainsString('<svg', $svg);
@@ -58,7 +55,7 @@ class LilypondRendererClientTest extends TestCase
      */
     public function testLilypondGetLog($res)
     {
-        $log = $this->client->getLog($res);
+        $log = $this->client->getResultLog($res);
 
         $this->assertIsString($log);
         $this->assertStringContainsString('Success: compilation successfully completed', $log);
@@ -72,6 +69,8 @@ class LilypondRendererClientTest extends TestCase
         $deleted = $this->client->deleteResult($res);
 
         $this->assertTrue($deleted);
+        $this->assertTrue($res->isDeleted());
+
         return $res;
     }
 
@@ -80,19 +79,59 @@ class LilypondRendererClientTest extends TestCase
      */
     public function testDeleteDeletedResult($res)
     {
-        $deleted = $this->client->deleteResult($res);
+        $deletingSuccess = $this->client->deleteResult($res);
 
-        $this->assertFalse($deleted);
+        $this->assertFalse($deletingSuccess);
+        $this->assertTrue($res->isDeleted());
     }
 
     public function testDeleteNonExistentDir()
     {
         $fakeDir = new stdClass();
         $fakeDir->name = "your_mama";
+        $fakeResult = new RenderResult('whatever_recipe', [$fakeDir]);
 
-        $deleted = $this->client->deleteResult([$fakeDir]);
+        $deletingSuccess = $this->client->deleteResult($fakeResult);
 
-        $this->assertFalse($deleted);
+        $this->assertFalse($deletingSuccess);
+    }
+
+    public function testLilypondFromLilypondSrc()
+    {
+        $ly_src = LilypondSrc::withLayout('{ c }', true);
+
+        $res = $this->client->renderSvg($ly_src, false);
+
+        $this->assertIsString($res->getTmp());
+        $this->assertIsArray($res->getContents());
+
+        return $res;
+    }
+
+    /**
+     * @depends testLilypondFromLilypondSrc
+     */
+    public function testLilypondFromLilypondSrcSuccess($res)
+    {
+        $this->assertTrue($res->isSuccessful());
+
+        $svg = $this->client->getResultOutputFile($res);
+
+        $this->assertIsString($svg);
+        $this->assertStringContainsString('<svg', $svg);
+    }
+    
+    /**
+     * @depends testLilypondFromLilypondSrc
+     */
+    public function testLilypondFromLilypondSrcContainsLayout($res)
+    {
+        $ly = $this->client->getProcessedFile($res->getTmp(), 'score.ly');
+        $layout = file_get_contents(__DIR__ . '/../src/lilypond/default_layout.txt');
+        $paperfix = file_get_contents(__DIR__ . '/../src/lilypond/infinite_paper.txt');
+
+        $this->assertStringContainsString($layout, $ly);
+        $this->assertStringContainsString($paperfix, $ly);
     }
 
 
@@ -102,7 +141,7 @@ class LilypondRendererClientTest extends TestCase
     {
         $res = $this->client->renderSvg('{ c ');
 
-        $this->assertFalse($this->client->isRenderSuccessful($res));
+        $this->assertFalse($res->isSuccessful());
         return $res;
     }
 
@@ -111,7 +150,7 @@ class LilypondRendererClientTest extends TestCase
      */
     public function testLilypondErrorLog($res)
     {
-        $log = $this->client->getLog($res);
+        $log = $this->client->getResultLog($res);
 
         $this->assertIsString($log);
         $this->assertStringContainsString('fatal error: failed files: "score.ly"', $log);
