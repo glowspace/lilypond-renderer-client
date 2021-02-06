@@ -15,7 +15,7 @@ Add following to your composer.json
 "repositories": [
     {
         "type": "vcs", 
-        "url": "https://gitlab.com/proscholy/lilypond-renderer-client"
+        "url": "https://github.com/proscholy/lilypond-renderer-client"
     }
 ],
 ~~~
