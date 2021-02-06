@@ -64,8 +64,8 @@ class Client
 
     public function deleteResult(RenderResult $res) : bool
     {
-        $tmp = $res->getTmp();
-        $response = $this->client->get("del?dir=$tmp");
+        $promise = $this->deleteResultAsync($res);
+        $response = $promise->wait();
 
         $success = $response->getBody()->getContents() == "ok\n";
 
@@ -74,6 +74,12 @@ class Client
         }
 
         return $success;
+    }
+
+    public function deleteResultAsync(RenderResult $res)
+    {
+        $tmp = $res->getTmp();
+        return $this->client->getAsync("del?dir=$tmp");
     }
 }
 
