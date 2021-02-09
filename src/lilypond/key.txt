@@ -1,0 +1,3 @@
+
+originalKey = VAR_KEY_MAJOR
+targetKey = \originalKey

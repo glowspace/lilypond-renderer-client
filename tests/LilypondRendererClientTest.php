@@ -98,7 +98,8 @@ class LilypondRendererClientTest extends TestCase
 
     public function testLilypondFromLilypondSrc()
     {
-        $ly_src = LilypondSrc::withLayout('{ c }', true);
+        $ly_src = new LilypondSrc('{ c }');
+        $ly_src->applyLayout()->applyInfinitePaper();
 
         $res = $this->client->renderSvg($ly_src, false);
 
@@ -119,19 +120,6 @@ class LilypondRendererClientTest extends TestCase
 
         $this->assertIsString($svg);
         $this->assertStringContainsString('<svg', $svg);
-    }
-    
-    /**
-     * @depends testLilypondFromLilypondSrc
-     */
-    public function testLilypondFromLilypondSrcContainsLayout($res)
-    {
-        $ly = $this->client->getProcessedFile($res->getTmp(), 'score.ly');
-        $layout = file_get_contents(__DIR__ . '/../src/lilypond/default_layout.txt');
-        $paperfix = file_get_contents(__DIR__ . '/../src/lilypond/infinite_paper.txt');
-
-        $this->assertStringContainsString($layout, $ly);
-        $this->assertStringContainsString($paperfix, $ly);
     }
 
 

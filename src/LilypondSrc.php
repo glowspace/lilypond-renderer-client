@@ -4,43 +4,85 @@ namespace ProScholy\LilypondRenderer;
 
 class LilypondSrc
 {
-    protected $src;
-    const NO_LAYOUT = 'no_layout';
+    protected string $src;
+    protected string $srcConfig;
+    protected string $usrConfig;
+    protected string $layout;
+    protected string $paper;
 
-    private function __construct($src)
+    protected array $fragments = [
+        // user input
+        'src' => '',
+        'originalKey' => '',
+        // view config
+        'targetKey' => '',
+        'disableParts' => '',
+        // default config
+        'layout' => '',
+        'paper' => ''
+    ];
+
+    public function __construct($src)
     {
-        $this->src = $src;
+        $this->fragments['src'] = $src;
     }
 
-    private static function getFragment($fname) {
-        return file_get_contents(__DIR__ . "/lilypond/$fname.txt");
-    }
-
-    public static function fromRaw($src)
+    public function applyLayout($layout = 'default_layout', $font = 'amiri')
     {
-        return new self($src);
-    }
+        $this->fragments['layout'] = self::loadFragment($layout, ['VAR_FONT_NAME' => $font]);
 
-    public static function withLayout($lilypond, bool $infinite_paper, $layout = 'default_layout')
-    {
-        $src = $lilypond;
-        if ($layout != self::NO_LAYOUT) {
-            $src .= self::getFragment($layout);
+        if ($this->fragments['originalKey'] == '') {
+            $this->setOriginalKey('c');
         }
-        if ($infinite_paper) {
-            $src .= self::getFragment('infinite_paper');
+        return $this;
+    }
+
+    public function applyInfinitePaper($width_mm = 148)
+    {
+        $this->fragments['paper'] = self::loadFragment('infinite_paper', ['VAR_WIDTH_MM' => $width_mm]);
+        return $this;
+    }
+
+    public function setOriginalKey(string $key_major)
+    {
+        $this->fragments['originalKey'] = self::loadFragment('key', ['VAR_KEY_MAJOR' => $key_major]);
+        return $this;
+    }
+
+    public function setTargetKey(string $key_major)
+    {
+        $this->fragments['targetKey'] = "targetKey = $key_major";
+        return $this;
+    }
+
+    public function disableParts(array $part_names)
+    {
+        foreach ($part_names as $part_name) {
+            if (in_array($part_name, ['melodie', 'alt', 'akordy', 'text', 'textAlt'])) {
+                $this->fragments['disableParts'] .= "$part_name = ##f\n";
+            }
         }
 
-        return new self($src);
+        return $this;
+    }
+
+    private static function loadFragment($fname, array $arr_replace = []) {
+        $str = file_get_contents(__DIR__ . "/lilypond/$fname.txt");
+
+        foreach ($arr_replace as $repl => $with) {
+            $str = str_replace($repl, $with, $str);
+        }
+
+        return $str;
     }
 
     public function getSrc()
     {
-        return $this->src;
+        return $this->fragments['src'];
     }
 
     public function __toString()
     {
-        return $this->src;
+        return implode("\n", array_values($this->fragments));
     }
 }

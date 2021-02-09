@@ -1,4 +1,35 @@
+font = #"VAR_FONT_NAME"
 
+showMelodie = ##f
+#(if melodie (set! showMelodie #t))
+
+showChords = ##f
+#(if akordy (set! showChords #t))
+
+melodie = \relative c' {
+  \key \originalKey \major
+  #(if alt #{ { \voiceOne } #}) 
+	#(if showMelodie #{ { \melodie } #}) 
+}
+
+alt = \relative c' {
+  #(if showMelodie #{ { \voiceTwo } #}) 
+  #(if alt #{ { \alt } #}) 
+}
+ 
+\score { \transpose \originalKey \targetKey
+  <<
+    \new ChordNames { #(if showChords #{ { \akordy } #}) }
+		\new Staff \with {\consists "Merge_rests_engraver"} {
+				<<
+				 	\new Voice = "one" {  \melodie }
+					\new Voice = "two" {  \alt }
+				>>
+		 }
+    #(if text #{ \new Lyrics \lyricsto "one" \text  #})
+		#(if textAlt #{ \new Lyrics \lyricsto "two" \textAlt  #})
+  >>
+}
 
 %přizpůsobení vzhledu
 \layout {
@@ -11,12 +42,13 @@
         \set majorSevenSymbol = \markup { maj7 }		% mění zobrazení maj akordů
         \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.padding = #0.7		% posunuje akordy výš (defaultně 0.5)
         \set chordChanges = ##t		% když je vícekrát za sebou stejný akord, zobrazí se jen jednou
+        #(if font #{ \override ChordName #'font-name = \font #})
       }
     }
     \context {
       \Lyrics {
         %\override LyricHyphen.minimum-distance = #1	% vynucení pomlček mezi slabikami
-                                                        % docela jsem si zvyknul to nepoužívat
+        #(if font #{ \override LyricText #'font-name = \font #})
       }
     }
     \context {
