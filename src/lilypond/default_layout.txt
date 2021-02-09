@@ -49,6 +49,7 @@ alt = \relative c' {
       \Lyrics {
         %\override LyricHyphen.minimum-distance = #1	% vynucení pomlček mezi slabikami
         #(if font #{ \override LyricText #'font-name = \font #})
+        #(if font #{ \override StanzaNumber #'font-name = \font #})
       }
     }
     \context {
