@@ -27,9 +27,12 @@ class LilypondSrc
         $this->fragments['src'] = $src;
     }
 
-    public function applyLayout($layout = 'default_layout', $font = 'amiri')
+    public function applyLayout($layout = 'default_layout', $font = 'amiri', $fontSize = 2.5)
     {
-        $this->fragments['layout'] = self::loadFragment($layout, ['VAR_FONT_NAME' => $font]);
+        $this->fragments['layout'] = self::loadFragment($layout, [
+            'VAR_FONT_NAME' => $font,
+            'VAR_FONT_SIZE' => $fontSize
+        ]);
 
         if ($this->fragments['originalKey'] == '') {
             $this->setOriginalKey('c');

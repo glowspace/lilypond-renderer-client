@@ -1,4 +1,5 @@
 font = #"VAR_FONT_NAME"
+fontSize = VAR_FONT_SIZE
 
 showMelodie = ##f
 #(if melodie (set! showMelodie #t))
@@ -43,6 +44,7 @@ alt = \relative c' {
         \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.padding = #0.7		% posunuje akordy výš (defaultně 0.5)
         \set chordChanges = ##t		% když je vícekrát za sebou stejný akord, zobrazí se jen jednou
         #(if font #{ \override ChordName #'font-name = \font #})
+        \override ChordName #'font-size = \fontSize
       }
     }
     \context {
@@ -50,6 +52,8 @@ alt = \relative c' {
         %\override LyricHyphen.minimum-distance = #1	% vynucení pomlček mezi slabikami
         #(if font #{ \override LyricText #'font-name = \font #})
         #(if font #{ \override StanzaNumber #'font-name = \font #})
+        \override LyricText #'font-size = \fontSize	
+        \override StanzaNumber #'font-size = \fontSize
       }
     }
     \context {

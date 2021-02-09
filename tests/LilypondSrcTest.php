@@ -25,6 +25,14 @@ class LilypondSrcTest extends TestCase
         $this->assertStringContainsString("\layout", (string)$src);
     }
 
+    public function testDefaultLayoutFontSize()
+    {
+        $src = new LilypondSrc('{ c }');
+        $src->applyLayout('default_layout', 'amiri', 4);
+
+        $this->assertStringContainsString("fontSize = 4", (string)$src);
+    }
+
     public function testInfinitePaper()
     {
         $src = new LilypondSrc('{ c }');
