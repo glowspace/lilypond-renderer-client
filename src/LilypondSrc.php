@@ -40,7 +40,7 @@ class LilypondSrc
         return $this;
     }
 
-    public function applyInfinitePaper($width_mm = 148)
+    public function applyInfinitePaper($width_mm = 120)
     {
         $this->fragments['paper'] = self::loadFragment('infinite_paper', ['VAR_WIDTH_MM' => $width_mm]);
         return $this;
