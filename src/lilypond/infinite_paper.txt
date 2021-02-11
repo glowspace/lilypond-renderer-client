@@ -3,6 +3,7 @@
 \paper {
   #(set-paper-size "my size")
   indent = 0
+  top-margin = 1
 }
 
 % disable footer 
