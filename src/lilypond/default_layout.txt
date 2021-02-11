@@ -42,7 +42,6 @@ alt = \relative c' {
         \set chordRootNamer = #(chord-name->german-markup #t)		% Přepíná B na H
         \set majorSevenSymbol = \markup { maj7 }		% mění zobrazení maj akordů
         \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.padding = #0.7		% posunuje akordy výš (defaultně 0.5)
-        \set chordChanges = ##t		% když je vícekrát za sebou stejný akord, zobrazí se jen jednou
         #(if font #{ \override ChordName #'font-name = \font #})
         \override ChordName #'font-size = \fontSize
       }
