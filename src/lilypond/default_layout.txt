@@ -1,3 +1,10 @@
+
+
+
+
+% ----------------- ŠABLONA PROSCHOLY.CZ -- NEKOPÍROVAT -----------
+% --------------------- Filip Kratoš & Miroslav Šerý --------------
+
 font = #"VAR_FONT_NAME"
 fontSize = VAR_FONT_SIZE
 
