@@ -13,6 +13,7 @@ class LilypondSrc
     protected array $fragments = [
         // user input
         'src' => '',
+        'noedit' => '', // noedit comment for Frescobaldi users
         'originalKey' => '',
         // view config
         'targetKey' => '',
@@ -29,6 +30,8 @@ class LilypondSrc
 
     public function applyLayout($layout = 'default_layout', $font = 'amiri', $fontSize = 2.5)
     {
+        $this->fragments['noedit'] = self::loadFragment('no_edit');
+
         $this->fragments['layout'] = self::loadFragment($layout, [
             'VAR_FONT_NAME' => $font,
             'VAR_FONT_SIZE' => $fontSize
