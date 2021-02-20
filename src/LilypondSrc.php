@@ -28,13 +28,15 @@ class LilypondSrc
         $this->fragments['src'] = $src;
     }
 
-    public function applyLayout($layout = 'default_layout', $font = 'amiri', $fontSize = 2.5)
+    public function applyLayout($layout = 'default_layout', $font = 'amiri', $fontSize = 2.5, $chordFont = 'roboto', $chordFontSize = 1.5)
     {
         $this->fragments['noedit'] = self::loadFragment('no_edit');
 
         $this->fragments['layout'] = self::loadFragment($layout, [
             'VAR_FONT_NAME' => $font,
-            'VAR_FONT_SIZE' => $fontSize
+            'VAR_FONT_SIZE' => $fontSize,
+            'VAR_CHORD_FONT_NAME' => $chordFont,
+            'VAR_CHORD_FONT_SIZE' => $chordFontSize
         ]);
 
         if ($this->fragments['originalKey'] == '') {
