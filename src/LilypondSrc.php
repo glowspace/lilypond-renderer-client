@@ -11,6 +11,7 @@ class LilypondSrc
     protected string $paper;
 
     protected array $fragments = [
+        'pre-src' => '',
         // user input
         'src' => '',
         'noedit' => '', // noedit comment for Frescobaldi users
@@ -48,6 +49,13 @@ class LilypondSrc
     public function applyInfinitePaper($width_mm = 120)
     {
         $this->fragments['paper'] = self::loadFragment('infinite_paper', ['VAR_WIDTH_MM' => $width_mm]);
+        return $this;
+    }
+
+    public function applyTinynotes()
+    {
+        // todo make some append instead of rewriting
+        $this->fragments['pre-src'] = self::loadFragment('tinynotes');
         return $this;
     }
 
