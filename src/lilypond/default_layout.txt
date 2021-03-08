@@ -9,13 +9,13 @@ showMelodie = ##f
 showChords = ##f
 #(if akordy (set! showChords #t))
 
-melodie = \relative c' {
+melodie = \relative {
   \key \originalKey \major
   #(if alt #{ { \voiceOne } #}) 
 	#(if showMelodie #{ { \melodie } #}) 
 }
 
-alt = \relative c' {
+alt = \relative {
   #(if showMelodie #{ { \voiceTwo } #}) 
   #(if alt #{ { \alt } #}) 
 }
