@@ -39,7 +39,7 @@ class LilypondSrcTest extends TestCase
         $src->applyInfinitePaper();
 
         $this->assertStringContainsString("\paper", (string)$src);
-        $this->assertStringContainsString("148 mm", (string)$src);
+        $this->assertStringContainsString("120 mm", (string)$src);
         
         $src->applyInfinitePaper(200);
         $this->assertStringContainsString("200 mm", (string)$src);

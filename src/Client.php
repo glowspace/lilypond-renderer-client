@@ -3,6 +3,8 @@
 namespace ProScholy\LilypondRenderer;
 
 use GuzzleHttp\Client as HttpClient;
+use ZipStream\ZipStream;
+use ZipStream\Option\Archive;
 // // use GuzzleHttp\Exception\RequestException;
 // // use GuzzleHttp\Exception\ClientException;
 
@@ -32,6 +34,45 @@ class Client
                 ]
             ]
         ]);
+
+        return new RenderResult($recipe, json_decode($response->getBody()->getContents()));
+    }
+
+    public function renderZip($lilypond_src, array $include_files, $recipe) : RenderResult
+    {
+        // create an in-memory temp file
+        $tempStream = fopen('php://temp', 'rw');
+
+        // setup the zipping things
+        $zipStreamOptions = new Archive();
+        $zipStreamOptions->setOutputStream($tempStream);
+        $zipStream = new ZipStream('score.zip', $zipStreamOptions); 
+
+        // include the main src and the other files
+        $zipStream->addFile("score.ly", $lilypond_src);
+        foreach ($include_files as $filepath) {
+            if (file_exists($this->getIncludedFilePath($filepath))) {
+                $zipStream->addFileFromPath($filepath, $this->getIncludedFilePath($filepath));
+            } else {
+                logger("WARNING: File $filepath does not exist");
+            }
+        }
+
+        $zipStream->finish();
+        rewind($tempStream);
+        $contents = stream_get_contents($tempStream);
+
+        $response = $this->client->post("make?recipe=$recipe", [
+            'multipart' => [
+                [
+                    'name'     => 'file_zip', // input name, needs to stay the same
+                    'contents' => $contents,
+                    'filename' => 'score.zip' // doesn't matter
+                ]
+            ]
+        ]);
+
+        fclose($tempStream);
 
         return new RenderResult($recipe, json_decode($response->getBody()->getContents()));
     }
@@ -80,6 +121,11 @@ class Client
     {
         $tmp = $res->getTmp();
         return $this->client->getAsync("del?dir=$tmp");
+    }
+
+    private function getIncludedFilePath(string $fpath) : string
+    {
+        return __DIR__ . '/ly_includes/' . $fpath;
     }
 }
 

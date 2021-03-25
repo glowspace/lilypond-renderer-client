@@ -143,4 +143,35 @@ class LilypondRendererClientTest extends TestCase
         $this->assertIsString($log);
         $this->assertStringContainsString('fatal error: failed files: "score.ly"', $log);
     }
+
+    public function testLilypondZip()
+    {
+        $res = $this->client->renderZip('{ c }', [],  'svg');
+
+        $this->assertIsString($res->getTmp());
+        $this->assertIsArray($res->getContents());
+
+        return $res;
+    }
+
+    public function testLilypondZipMultipleFiles()
+    {
+        $res = $this->client->renderZip('\include "satb_parts/vynech.ly"  \vynech { c }', 
+            ['satb_parts/vynech.ly'],
+            'svgcrop');
+
+        $this->assertIsString($res->getTmp());
+        $this->assertIsArray($res->getContents());
+
+        return $res;
+    }
+
+    /**
+     * @depends testLilypondZipMultipleFiles
+     */
+    public function testZipMultipleFilesSuccess($res)
+    {
+        $this->assertTrue($res->isSuccessful());
+    }
+
 }
