@@ -3,6 +3,7 @@
 use Orchestra\Testbench\TestCase;
 // use ProScholy\LilypondRenderer\LilypondBasicTemplate;
 use ProScholy\LilypondRenderer\LilypondBasicTemplate;
+use ProScholy\LilypondRenderer\LilypondSrc;
 
 class LilypondBasicTemplateTest extends TestCase
 {
@@ -52,5 +53,23 @@ class LilypondBasicTemplateTest extends TestCase
         $src->setOriginalKey('fis');
 
         $this->assertStringContainsString("originalKey = fis", (string)$src);
+    }
+
+    public function testIncludeDir()
+    {
+        $src = new LilypondSrc('');
+        $src->withIncludeDirectory('satb_parts');
+
+        $this->assertContains('satb_parts/base-tkit.ly', $src->getIncludeFiles());
+    }
+    
+    /**
+     * @expectedException Exception
+     */
+    public function testIncludeWrongDir()
+    {
+        $src = new LilypondSrc('');
+
+        $src->withIncludeDirectory('saminamina_ee_wakawaka_e_e');
     }
 }

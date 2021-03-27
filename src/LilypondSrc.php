@@ -47,6 +47,22 @@ class LilypondSrc
         return $this;
     }
 
+    public function withIncludeDirectory(string $dir_include_path) : LilypondSrc
+    {
+        $files = glob(self::getIncludedFilePath($dir_include_path) . '/*');
+
+        if (!$files) {
+            throw new Exception("No directory $dir_include_path or the directory is empty");
+        }
+
+        foreach ($files as $file) {
+            $rel_fpath = str_replace(self::getIncludedFilePath(''), '', $file);
+            $this->includes[] = $rel_fpath;
+        }
+
+        return $this;
+    }
+
     public function hasIncludeFiles() : bool
     {
         return count($this->includes) > 0;
