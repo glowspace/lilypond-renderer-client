@@ -1,9 +1,10 @@
 <?php
 
 use Orchestra\Testbench\TestCase;
-use ProScholy\LilypondRenderer\LilypondSrc;
+// use ProScholy\LilypondRenderer\LilypondBasicTemplate;
+use ProScholy\LilypondRenderer\LilypondBasicTemplate;
 
-class LilypondSrcTest extends TestCase
+class LilypondBasicTemplateTest extends TestCase
 {
     protected function getPackageProviders($app)
     {
@@ -12,30 +13,30 @@ class LilypondSrcTest extends TestCase
 
     public function testRaw()
     {
-        $src = new LilypondSrc('{ c }');
+        $src = new LilypondBasicTemplate('{ c }');
 
         $this->assertEquals('{ c }', trim((string)$src));
     }
 
     public function testDefaultLayout()
     {
-        $src = new LilypondSrc('{ c }');
-        $src->applyLayout();
+        $src = new LilypondBasicTemplate('{ c }');
+        $src->applyDefaultLayout();
 
         $this->assertStringContainsString("\layout", (string)$src);
     }
 
     public function testDefaultLayoutFontSize()
     {
-        $src = new LilypondSrc('{ c }');
-        $src->applyLayout('default_layout', 'amiri', 4);
+        $src = new LilypondBasicTemplate('{ c }');
+        $src->applyDefaultLayout('amiri', 4);
 
         $this->assertStringContainsString("fontSize = 4", (string)$src);
     }
 
     public function testInfinitePaper()
     {
-        $src = new LilypondSrc('{ c }');
+        $src = new LilypondBasicTemplate('{ c }');
         $src->applyInfinitePaper();
 
         $this->assertStringContainsString("\paper", (string)$src);
@@ -47,25 +48,9 @@ class LilypondSrcTest extends TestCase
 
     public function testOriginalKey()
     {
-        $src = new LilypondSrc('{ c }');
+        $src = new LilypondBasicTemplate('{ c }');
         $src->setOriginalKey('fis');
 
         $this->assertStringContainsString("originalKey = fis", (string)$src);
-    }
-
-    public function testTargetKey()
-    {
-        $src = new LilypondSrc('{ c }');
-        $src->setTargetKey('fis');
-
-        $this->assertStringContainsString("targetKey = fis", (string)$src);
-    }
-    
-    public function testDisableMelodie()
-    {
-        $src = new LilypondSrc('{ c }');
-        $src->disableParts(['melodie']);
-    
-        $this->assertStringContainsString("melodie = ##f", (string)$src);
     }
 }

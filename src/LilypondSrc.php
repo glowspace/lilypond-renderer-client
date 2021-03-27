@@ -2,103 +2,74 @@
 
 namespace ProScholy\LilypondRenderer;
 
+use Exception;
+
 class LilypondSrc
 {
-    protected string $src;
-    protected string $srcConfig;
-    protected string $usrConfig;
-    protected string $layout;
-    protected string $paper;
-
-    protected array $fragments = [
-        'pre-src' => '',
-        // user input
-        'src' => '',
-        'noedit' => '', // noedit comment for Frescobaldi users
-        'originalKey' => '',
-        // view config
-        'targetKey' => '',
-        'disableParts' => '',
-        // default config
-        'layout' => '',
-        'paper' => ''
+    protected array $fragmentSections = [
+        'header' => [],
+        'src' => [],
+        'footer_vars' => [],
+        'footer' => [],
     ];
 
-    public function __construct($src)
+    protected array $includes;
+
+    public function __construct($src, array $includes = [])
     {
-        $this->fragments['src'] = $src;
-    }
-
-    public function applyLayout($layout = 'default_layout', $font = 'amiri', $fontSize = 2.5, $chordFont = 'roboto', $chordFontSize = 1.5)
-    {
-        $this->fragments['noedit'] = self::loadFragment('no_edit');
-
-        $this->fragments['layout'] = self::loadFragment($layout, [
-            'VAR_FONT_NAME' => $font,
-            'VAR_FONT_SIZE' => $fontSize,
-            'VAR_CHORD_FONT_NAME' => $chordFont,
-            'VAR_CHORD_FONT_SIZE' => $chordFontSize
-        ]);
-
-        if ($this->fragments['originalKey'] == '') {
-            $this->setOriginalKey('c');
+        $this->fragmentSections['src'] = [$src];
+        $this->includes = [];
+        
+        foreach ($includes as $fname) {
+            $this->withIncludeFile($fname);
         }
-        return $this;
     }
 
-    public function applyInfinitePaper($width_mm = 120)
+    protected function withFragmentStub(string $fname, string $section, array $arr_replace = []) : LilypondSrc
     {
-        $this->fragments['paper'] = self::loadFragment('infinite_paper', ['VAR_WIDTH_MM' => $width_mm]);
-        return $this;
-    }
-
-    public function applyTinynotes()
-    {
-        // todo make some append instead of rewriting
-        $this->fragments['pre-src'] = self::loadFragment('tinynotes');
-        return $this;
-    }
-
-    public function setOriginalKey(string $key_major)
-    {
-        $this->fragments['originalKey'] = self::loadFragment('key', ['VAR_KEY_MAJOR' => $key_major]);
-        return $this;
-    }
-
-    public function setTargetKey(string $key_major)
-    {
-        $this->fragments['targetKey'] = "targetKey = $key_major";
-        return $this;
-    }
-
-    public function disableParts(array $part_names)
-    {
-        foreach ($part_names as $part_name) {
-            if (in_array($part_name, ['melodie', 'alt', 'akordy', 'text', 'textAlt'])) {
-                $this->fragments['disableParts'] .= "$part_name = ##f\n";
-            }
-        }
-
-        return $this;
-    }
-
-    private static function loadFragment($fname, array $arr_replace = []) {
-        $str = file_get_contents(__DIR__ . "/lilypond/$fname.txt");
+        $str = file_get_contents(__DIR__ . "/lilypond_stubs/$fname.txt");
 
         foreach ($arr_replace as $repl => $with) {
             $str = str_replace($repl, $with, $str);
         }
 
-        return $str;
+        $this->fragmentSections[$section][] = $str;
+        return $this;
     }
 
-    public function getSrc()
+    public function withIncludeFile(string $file_include_path) : LilypondSrc
     {
-        return $this->fragments['src'];
+        if (file_exists(self::getIncludedFilePath($file_include_path))) {
+            $this->includes[] = $file_include_path;
+        } else {
+            throw new Exception("Cannot find file $file_include_path to be included in the src.");
+        }
+        return $this;
+    }
+
+    public function hasIncludeFiles() : bool
+    {
+        return count($this->includes) > 0;
+    }
+
+    public function getIncludeFiles() : array
+    {
+        return $this->includes;
     }
 
     public function __toString()
     {
-        return implode("\n", array_values($this->fragments));
+        $finalStr = "";
+        foreach (array_values($this->fragmentSections) as $section) {
+            foreach ($section as $fragment) {
+                $finalStr .= (string)$fragment . "\n";
+            }
+        }
+        return $finalStr;
+    }
+
+    public static function getIncludedFilePath(string $fpath) : string
+    {
+        return __DIR__ . '/ly_includes/' . $fpath;
     }
 }

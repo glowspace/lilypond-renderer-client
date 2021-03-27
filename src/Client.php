@@ -21,24 +21,33 @@ class Client
         ]);
     }
 
-    public function render($lilypond_src, $recipe) : RenderResult
+    private function make(string $recipe, string $contents, $zip = false)
     {
-        // todo: catch exceptions 
-
+        // todo: catch exceptions
         $response = $this->client->post("make?recipe=$recipe", [
             'multipart' => [
                 [
-                    'name'     => 'file_lilypond', // input name, needs to stay the same
-                    'contents' => (string)$lilypond_src,
-                    'filename' => 'score.ly' // doesn't matter
+                    'name'     => $zip ? 'file_zip' : 'file_lilypond', // input name, needs to stay the same
+                    'contents' => $contents,
+                    'filename' => $zip ? 'score.zip' : 'score.ly' // doesn't matter
                 ]
             ]
         ]);
 
+        // todo: exception when the output is not a JSON
         return new RenderResult($recipe, json_decode($response->getBody()->getContents()));
     }
 
-    public function renderZip($lilypond_src, array $include_files, $recipe) : RenderResult
+    public function render($lilypond_src, $recipe) : RenderResult
+    {
+        if ($lilypond_src instanceof LilypondSrc && $lilypond_src->hasIncludeFiles()) {
+            return $this->renderZip($lilypond_src, $recipe);
+        }
+
+        return $this->make($recipe, (string)$lilypond_src);
+    }
+
+    public function renderZip(LilypondSrc $lilypond_src, $recipe) : RenderResult
     {
         // create an in-memory temp file
         $tempStream = fopen('php://temp', 'rw');
@@ -49,32 +58,20 @@ class Client
         $zipStream = new ZipStream('score.zip', $zipStreamOptions); 
 
         // include the main src and the other files
-        $zipStream->addFile("score.ly", $lilypond_src);
-        foreach ($include_files as $filepath) {
-            if (file_exists($this->getIncludedFilePath($filepath))) {
-                $zipStream->addFileFromPath($filepath, $this->getIncludedFilePath($filepath));
-            } else {
-                logger("WARNING: File $filepath does not exist");
-            }
+        $zipStream->addFile("score.ly", (string)$lilypond_src);
+        foreach ($lilypond_src->getIncludeFiles() as $filename) {
+            $zipStream->addFileFromPath($filename,  LilypondSrc::getIncludedFilePath($filename));
         }
 
+        // get the zip file contents
         $zipStream->finish();
         rewind($tempStream);
         $contents = stream_get_contents($tempStream);
 
-        $response = $this->client->post("make?recipe=$recipe", [
-            'multipart' => [
-                [
-                    'name'     => 'file_zip', // input name, needs to stay the same
-                    'contents' => $contents,
-                    'filename' => 'score.zip' // doesn't matter
-                ]
-            ]
-        ]);
-
+        // obtain the result of the `make` request and close the memory stream
+        $result = $this->make($recipe, $contents, true);
         fclose($tempStream);
-
-        return new RenderResult($recipe, json_decode($response->getBody()->getContents()));
+        return $result;
     }
 
     public function renderSvg($lilypond_src, $crop = true) : RenderResult
@@ -121,11 +118,6 @@ class Client
     {
         $tmp = $res->getTmp();
         return $this->client->getAsync("del?dir=$tmp");
-    }
-
-    private function getIncludedFilePath(string $fpath) : string
-    {
-        return __DIR__ . '/ly_includes/' . $fpath;
     }
 }
 

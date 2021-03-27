@@ -3,6 +3,7 @@
 use Orchestra\Testbench\TestCase;
 use ProScholy\LilypondRenderer\Client;
 use ProScholy\LilypondRenderer\RenderResult;
+use ProScholy\LilypondRenderer\LilypondBasicTemplate;
 use ProScholy\LilypondRenderer\LilypondSrc;
 
 class LilypondRendererClientTest extends TestCase
@@ -96,10 +97,10 @@ class LilypondRendererClientTest extends TestCase
         $this->assertFalse($deletingSuccess);
     }
 
-    public function testLilypondFromLilypondSrc()
+    public function testLilypondFromLilypondBasicTemplate()
     {
-        $ly_src = new LilypondSrc('{ c }');
-        $ly_src->applyLayout()->applyInfinitePaper();
+        $ly_src = new LilypondBasicTemplate('{ c }');
+        $ly_src->applyDefaultLayout()->applyInfinitePaper();
 
         $res = $this->client->renderSvg($ly_src, false);
 
@@ -110,9 +111,9 @@ class LilypondRendererClientTest extends TestCase
     }
 
     /**
-     * @depends testLilypondFromLilypondSrc
+     * @depends testLilypondFromLilypondBasicTemplate
      */
-    public function testLilypondFromLilypondSrcSuccess($res)
+    public function testLilypondFromLilypondBasicTemplateSuccess($res)
     {
         $this->assertTrue($res->isSuccessful());
 
@@ -146,7 +147,7 @@ class LilypondRendererClientTest extends TestCase
 
     public function testLilypondZip()
     {
-        $res = $this->client->renderZip('{ c }', [],  'svg');
+        $res = $this->client->renderZip(new LilypondSrc('{ c }'), 'svg');
 
         $this->assertIsString($res->getTmp());
         $this->assertIsArray($res->getContents());
@@ -156,9 +157,11 @@ class LilypondRendererClientTest extends TestCase
 
     public function testLilypondZipMultipleFiles()
     {
-        $res = $this->client->renderZip('\include "satb_parts/vynech.ly"  \vynech { c }', 
-            ['satb_parts/vynech.ly'],
-            'svgcrop');
+        $src = new LilypondSrc('\include "satb_parts/vynech.ly"  \vynech { c }', [
+            'satb_parts/vynech.ly'
+        ]);
+
+        $res = $this->client->renderSvg($src);
 
         $this->assertIsString($res->getTmp());
         $this->assertIsArray($res->getContents());
