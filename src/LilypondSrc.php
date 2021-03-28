@@ -3,6 +3,8 @@
 namespace ProScholy\LilypondRenderer;
 
 use Exception;
+use ZipStream\ZipStream;
+use ZipStream\Option\Archive;
 
 class LilypondSrc
 {
@@ -101,6 +103,32 @@ class LilypondSrc
             }
         }
         return $finalStr;
+    }
+
+    public function getZippedSrcStream()
+    {
+        $tempStream = fopen('php://temp', 'rw');
+
+        // setup the zipping things
+        $zipStreamOptions = new Archive();
+        $zipStreamOptions->setOutputStream($tempStream);
+        $zipStream = new ZipStream('score.zip', $zipStreamOptions); 
+
+        // include the main src and the other files
+        $zipStream->addFile("score.ly", (string)$this);
+        foreach ($this->getIncludeFilesString() as $filename => $src) {
+            $zipStream->addFile($filename, $src);
+        }
+
+        foreach ($this->getIncludeFiles() as $filename) {
+            $zipStream->addFileFromPath($filename,  self::getIncludedFilePath($filename));
+        }
+
+        // get the zip file contents
+        $zipStream->finish();
+        rewind($tempStream);
+
+        return $tempStream;
     }
 
     public static function getIncludedFilePath(string $fpath) : string

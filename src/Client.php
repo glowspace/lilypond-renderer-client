@@ -49,32 +49,12 @@ class Client
 
     public function renderZip(LilypondSrc $lilypond_src, $recipe) : RenderResult
     {
-        // create an in-memory temp file
-        $tempStream = fopen('php://temp', 'rw');
-
-        // setup the zipping things
-        $zipStreamOptions = new Archive();
-        $zipStreamOptions->setOutputStream($tempStream);
-        $zipStream = new ZipStream('score.zip', $zipStreamOptions); 
-
-        // include the main src and the other files
-        $zipStream->addFile("score.ly", (string)$lilypond_src);
-        foreach ($lilypond_src->getIncludeFilesString() as $filename => $src) {
-            $zipStream->addFile($filename, $src);
-        }
-
-        foreach ($lilypond_src->getIncludeFiles() as $filename) {
-            $zipStream->addFileFromPath($filename,  LilypondSrc::getIncludedFilePath($filename));
-        }
-
-        // get the zip file contents
-        $zipStream->finish();
-        rewind($tempStream);
-        $contents = stream_get_contents($tempStream);
+        $zipStream = $lilypond_src->getZippedSrcStream();
+        $contents = stream_get_contents($zipStream);
 
         // obtain the result of the `make` request and close the memory stream
         $result = $this->make($recipe, $contents, true);
-        fclose($tempStream);
+        fclose($zipStream);
         return $result;
     }
 
