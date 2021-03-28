@@ -13,14 +13,16 @@ class LilypondSrc
         'footer' => [],
     ];
 
-    protected array $includes;
+    protected array $includeFiles;
+    protected array $includeFilesString;
 
-    public function __construct($src, array $includes = [])
+    public function __construct($src, array $include_files = [])
     {
         $this->fragmentSections['src'] = [$src];
-        $this->includes = [];
+        $this->includeFiles = [];
+        $this->includeFilesString = [];
         
-        foreach ($includes as $fname) {
+        foreach ($include_files as $fname) {
             $this->withIncludeFile($fname);
         }
     }
@@ -30,7 +32,12 @@ class LilypondSrc
         $str = file_get_contents(__DIR__ . "/lilypond_stubs/$fname.txt");
 
         foreach ($arr_replace as $repl => $with) {
-            $str = str_replace($repl, $with, $str);
+            $withStr = $with;
+            if ($with instanceof bool) {
+                $withStr = $with ? '##t' : '##f'; // convert boolean to Lilypond/Scheme boolean
+            }
+
+            $str = str_replace($repl, $withStr, $str);
         }
 
         $this->fragmentSections[$section][] = $str;
@@ -40,7 +47,7 @@ class LilypondSrc
     public function withIncludeFile(string $file_include_path) : LilypondSrc
     {
         if (file_exists(self::getIncludedFilePath($file_include_path))) {
-            $this->includes[] = $file_include_path;
+            $this->includeFiles[] = $file_include_path;
         } else {
             throw new Exception("Cannot find file $file_include_path to be included in the src.");
         }
@@ -57,20 +64,32 @@ class LilypondSrc
 
         foreach ($files as $file) {
             $rel_fpath = str_replace(self::getIncludedFilePath(''), '', $file);
-            $this->includes[] = $rel_fpath;
+            $this->includeFiles[] = $rel_fpath;
         }
 
         return $this;
     }
 
-    public function hasIncludeFiles() : bool
+    public function withIncludeFileString(string $fname, string $src) : LilypondSrc
     {
-        return count($this->includes) > 0;
+        // todo: reject if exists
+        $this->includeFilesString[$fname] = $src;
+        return $this;
+    }
+
+    public function hasIncludes() : bool
+    {
+        return (count($this->includeFiles) + count($this->includeFilesString)) > 0;
     }
 
     public function getIncludeFiles() : array
     {
-        return $this->includes;
+        return $this->includeFiles;
+    }
+
+    public function getIncludeFilesString() : array
+    {
+        return $this->includeFilesString;
     }
 
     public function __toString()

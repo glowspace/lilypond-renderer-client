@@ -1,1 +1,0 @@
-TwoVoicesPerStaff = VAR_CHORD_FONT_SIZE

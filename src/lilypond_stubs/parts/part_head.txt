@@ -1,0 +1,9 @@
+\include "satb_parts/satb_header.ily"
+\include "global.ily"
+
+Key = {  
+  \key VAR_KEY_MAJOR \major 
+}
+
+partTimeSignature = \time VAR_TIME
+endPartTimeSignature = \time VAR_TIME_END

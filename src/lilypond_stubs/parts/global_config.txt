@@ -1,0 +1,1 @@
+TwoVoicesPerStaff = VAR_TWO_VOICES_PER_STAFF

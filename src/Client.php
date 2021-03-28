@@ -40,7 +40,7 @@ class Client
 
     public function render($lilypond_src, $recipe) : RenderResult
     {
-        if ($lilypond_src instanceof LilypondSrc && $lilypond_src->hasIncludeFiles()) {
+        if ($lilypond_src instanceof LilypondSrc && $lilypond_src->hasIncludes()) {
             return $this->renderZip($lilypond_src, $recipe);
         }
 
@@ -59,6 +59,10 @@ class Client
 
         // include the main src and the other files
         $zipStream->addFile("score.ly", (string)$lilypond_src);
+        foreach ($lilypond_src->getIncludeFilesString() as $filename => $src) {
+            $zipStream->addFile($filename, $src);
+        }
+
         foreach ($lilypond_src->getIncludeFiles() as $filename) {
             $zipStream->addFileFromPath($filename,  LilypondSrc::getIncludedFilePath($filename));
         }
