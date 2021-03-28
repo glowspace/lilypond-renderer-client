@@ -4,6 +4,7 @@ use Orchestra\Testbench\TestCase;
 use ProScholy\LilypondRenderer\Client;
 use ProScholy\LilypondRenderer\RenderResult;
 use ProScholy\LilypondRenderer\LilypondBasicTemplate;
+use ProScholy\LilypondRenderer\LilypondPartsTemplate;
 use ProScholy\LilypondRenderer\LilypondSrc;
 
 class LilypondRendererClientTest extends TestCase
@@ -177,4 +178,16 @@ class LilypondRendererClientTest extends TestCase
         $this->assertTrue($res->isSuccessful());
     }
 
+
+    public function testLilypondPartRender()
+    {
+        $src = new LilypondPartsTemplate("stuff = { c' }");
+        $src->withPart('1-2-3', "solo = { \\stuff d' e' }\n soloText = \\lyricmode { a -- hoj -- ky }} ");
+        $src->withPart('R', "solo = { fis'2 gis'2 }", 'fis');   
+
+        $res = $this->client->renderSvg($src, true);
+
+        $this->assertIsString($res->getTmp());
+        $this->assertIsArray($res->getContents());
+    }
 }

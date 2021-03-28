@@ -33,7 +33,7 @@ class LilypondSrc
 
         foreach ($arr_replace as $repl => $with) {
             $withStr = $with;
-            if ($with instanceof bool) {
+            if (is_bool($with)) {
                 $withStr = $with ? '##t' : '##f'; // convert boolean to Lilypond/Scheme boolean
             }
 

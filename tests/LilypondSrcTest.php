@@ -3,6 +3,7 @@
 use Orchestra\Testbench\TestCase;
 // use ProScholy\LilypondRenderer\LilypondBasicTemplate;
 use ProScholy\LilypondRenderer\LilypondBasicTemplate;
+use ProScholy\LilypondRenderer\LilypondPartsTemplate;
 use ProScholy\LilypondRenderer\LilypondSrc;
 
 class LilypondBasicTemplateTest extends TestCase

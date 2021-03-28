@@ -4,7 +4,7 @@ namespace ProScholy\LilypondRenderer;
 
 class LilypondPartsTemplate extends LilypondSrc
 {
-    public function __construct(string $global_src, bool $two_voices_per_staff = true, bool $include_template_files = true)
+    public function __construct(string $global_src = '', bool $two_voices_per_staff = true, bool $include_template_files = true)
     {
         parent::__construct('');
 
