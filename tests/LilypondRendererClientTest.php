@@ -182,12 +182,14 @@ class LilypondRendererClientTest extends TestCase
     public function testLilypondPartRender()
     {
         $src = new LilypondPartsTemplate("stuff = { c' }");
-        $src->withPart('1-2-3', "solo = { \\stuff d' e' }\n soloText = \\lyricmode { a -- hoj -- ky }} ");
+        $src->withPart('1-2-3', "solo = { \\stuff d' e' }\n soloText = \\lyricmode { a -- hoj -- ky } ");
         $src->withPart('R', "solo = { fis'2 gis'2 }", 'fis');   
 
         $res = $this->client->renderSvg($src, true);
 
         $this->assertIsString($res->getTmp());
         $this->assertIsArray($res->getContents());
+
+        file_put_contents('logs/score.zip', $src->getZippedSrcStream());
     }
 }

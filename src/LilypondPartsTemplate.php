@@ -27,9 +27,9 @@ class LilypondPartsTemplate extends LilypondSrc
     {
         $partSrc = new LilypondSrc($src);
 
-        $partSrc->withFragmentStub('parts/part_head', 'header', [
+        $partSrc->withFragmentStub('parts/part_header', 'header', [
             'VAR_KEY_MAJOR' => $key_major,
-            'VAR_TIME' => $time_signature,
+            'VAR_TIME_BEGIN' => $time_signature,
             'VAR_TIME_END' => $end_time_signature === null ? $time_signature : $end_time_signature
         ])->withFragmentStub('parts/part_footer', 'footer');
 
