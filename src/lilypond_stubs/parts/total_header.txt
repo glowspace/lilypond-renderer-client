@@ -1,4 +1,4 @@
-\version "2.22.0"
+\version "VAR_LILYPOND_VERSION"
 
 \include "satb_parts/satb-header.ly"
 globalRender = ##t

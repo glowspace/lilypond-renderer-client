@@ -29,7 +29,7 @@ class LilypondSrc
         }
     }
 
-    protected function withFragmentStub(string $fname, string $section, array $arr_replace = []) : LilypondSrc
+    public function withFragmentStub(string $fname, string $section, array $arr_replace = []) : LilypondSrc
     {
         $str = file_get_contents(__DIR__ . "/lilypond_stubs/$fname.txt");
 
@@ -37,6 +37,10 @@ class LilypondSrc
             $withStr = $with;
             if (is_bool($with)) {
                 $withStr = $with ? '##t' : '##f'; // convert boolean to Lilypond/Scheme boolean
+            }
+
+            if (!str_contains($str, $repl)) {
+                throw new Exception('Variable $repl not found in stub');
             }
 
             $str = str_replace($repl, $withStr, $str);

@@ -4,15 +4,20 @@ namespace ProScholy\LilypondRenderer;
 
 class LilypondPartsTemplate extends LilypondSrc
 {
-    public function __construct(string $global_src = '', bool $two_voices_per_staff = true, bool $include_template_files = true)
+    protected LilypondPartsGlobalConfig $config;
+
+    public function __construct(string $global_src = '', ?LilypondPartsGlobalConfig $config = null, bool $include_template_files = true)
     {
         parent::__construct('');
 
-        $this->withFragmentStub('parts/total_header', 'header')
-            ->withFragmentStub('parts/total_footer', 'footer');
+        $this->config = $config ?? new LilypondPartsGlobalConfig();
+
+        $this->withFragmentStub('parts/total_header', 'header', [
+            'VAR_LILYPOND_VERSION' => $this->config->getLilypondVersion()
+        ])->withFragmentStub('parts/total_footer', 'footer');
 
         $globalPartSrc = new LilypondSrc($global_src);
-        $globalPartSrc->withFragmentStub('parts/global_config', 'header', ['VAR_TWO_VOICES_PER_STAFF' => $two_voices_per_staff]);
+        $this->config->setUpGlobalSrc($globalPartSrc);
 
         // put the global src into a separate file that will be included in the zip
         $this->withIncludeFileString('global.ily', (string)$globalPartSrc);
@@ -23,20 +28,31 @@ class LilypondPartsTemplate extends LilypondSrc
         }
     }
 
-    public function withPart(string $name, string $src, $key_major = 'c', $time_signature = '4/4', $end_time_signature = null)
+    public function withPart(string $name, string $src, 
+                                $key_major = 'c', $time_signature = '4/4', $end_time_signature = false, $end_key_major = false, 
+                                $break_before = false, $part_transpose = false)
     {
         $partSrc = new LilypondSrc($src);
 
         $partSrc->withFragmentStub('parts/part_header', 'header', [
-            'VAR_KEY_MAJOR' => $key_major,
+            'VAR_LILYPOND_VERSION' => $this->config->getLilypondVersion(),
+            'VAR_KEY_MAJOR_BEGIN' => $key_major,
+            'VAR_KEY_MAJOR_END' => $end_key_major,
             'VAR_TIME_BEGIN' => $time_signature,
-            'VAR_TIME_END' => $end_time_signature === null ? $time_signature : $end_time_signature
+            'VAR_TIME_END' => $end_time_signature
         ])->withFragmentStub('parts/part_footer', 'footer');
 
         // include the part in the final zip
         $this->withIncludeFileString("$name.ly", (string)$partSrc);
 
         // add the \include directive to the total score file
-        $this->withFragmentStub('parts/total_part_include', 'src', ['VAR_PART_FILE' => "$name.ly"]);
+        // this depends on the global config 
+        // (so far only one such exists)
+        // todo: add more part_include files for different layouts
+        $this->withFragmentStub($this->config->getPartIncludeStub(), 'src', [
+            'VAR_PART_FILE' => "$name.ly",
+            'VAR_BREAK_BEFORE' => $break_before || $this->config->getForcePartBreaks(),
+            'VAR_PART_TRANSPOSE' => $part_transpose
+        ]);
     }
 }
