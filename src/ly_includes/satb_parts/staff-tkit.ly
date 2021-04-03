@@ -2,6 +2,7 @@
 %%%% This file is part of LilyPond, the GNU music typesetter.
 %%%%
 %%%% Copyright (C) 2015--2021 Trevor Daniels <t.daniels@treda.co.uk>
+%%%% Copyright (C) 2021 Miroslav Sery
 %%%%
 %%%% LilyPond is free software: you can redistribute it and/or modify
 %%%% it under the terms of the GNU General Public License as published by
@@ -16,23 +17,8 @@
 %%%% You should have received a copy of the GNU General Public License
 %%%% along with LilyPond.  If not, see <http://www.gnu.org/licenses/>.
 
-%\version "2.19.22"
-
 \include "voice-tkit.ly"
 
-
-%% Staff-oriented functions
-
-% These assume the following lists have been defined:
-%   voice-prefixes  eg "Soprano"
-%   voice-postfixes  eg "Music"
-%   lyrics-postfixes  eg "Lyrics"
-%   lyrics-names  eg "VerseOne"
-%   variable-names  eg "Time"
-%
-% The first three lists are used to generate compound
-% names such as "SopranoLyrics" and "SopranoInstrumentName"
-% The last two lists of names are used as-is.
 
 
 make-one-voice-staff =
@@ -45,7 +31,7 @@ make-one-voice-staff =
               clef: the clef for this staff
  dynamic-direction: dynamics are up, down or neither"
 
-   (define music (make-id name "Music"))
+   (define music (make-id name ""))
    (define instrName (make-id name "InstrumentName"))
    (define shortInstrName (make-id name "ShortInstrumentName"))
    (define midiName (make-id name "MidiInstrument"))
@@ -76,8 +62,8 @@ make-one-voice-staff =
 
        }
        {
-        \once \set Staff.explicitKeySignatureVisibility = #begin-of-line-visible
-         #(if Key Key)
+         #(if keyNotChanged #{ \once \set Staff.explicitKeySignatureVisibility = #begin-of-line-visible #})
+         #(if keyMajor #{ \key \keyMajor \major #})
          \clef #clef
          \make-voice #name
        }
@@ -97,7 +83,6 @@ make-two-voice-staff =
 
    (define v1music (make-id v1name ""))
    (define v2music (make-id v2name ""))
-   (define key (make-id "Key" ""))
    (define instrName (make-id name "InstrumentName"))
    (define v1InstrName (make-id v1name "InstrumentName"))
    (define v2InstrName (make-id v2name "InstrumentName"))
@@ -142,8 +127,8 @@ make-two-voice-staff =
                   } #} )
            }
            <<
-             \once \set Staff.explicitKeySignatureVisibility = #begin-of-line-visible
-             #(if Key Key)
+             #(if keyNotChanged #{ \once \set Staff.explicitKeySignatureVisibility = #begin-of-line-visible #})
+             #(if keyMajor #{ \key \keyMajor \major #})
              \clef #clef
 
              #(if v1music

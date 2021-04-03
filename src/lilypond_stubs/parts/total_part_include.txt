@@ -1,1 +1,3 @@
+breakBefore = VAR_BREAK_BEFORE
+partTranspose = VAR_PART_TRANSPOSE
 \include "VAR_PART_FILE"

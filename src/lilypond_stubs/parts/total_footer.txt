@@ -1,1 +1,1 @@
-\include "satb_parts/satb_footer.ily"	
+\include "satb_parts/satb-footer.ly"	

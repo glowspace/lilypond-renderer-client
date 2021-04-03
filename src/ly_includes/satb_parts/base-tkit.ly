@@ -83,11 +83,9 @@
 
 #(define variable-names
    ;; These names are used verbatim in code, so may not be changed
-   '("Key"
-     "Layout"
+   '("Layout"
      "PianoDynamics"
-     "Time"
-     "TwoVoicesPerStaff"))
+     "Time"))
 
 % Define the predicates used in the tkits and templates
 #(define (above-or-below? x)
@@ -142,27 +140,3 @@
    (define-missing-variables! (append
                                   all-music-lyrics-names
                                   variable-names) #t))
-
-
-#(define (fix-voice-lyric! id placeholderMusic)
-  (define sym (string->symbol id))
-  (define val (get-id id))
-    (if (ly:music? val)
-      (ly:parser-define! sym #{ { $val $placeholderMusic } #} )
-      (ly:parser-define! sym placeholderMusic)))
-
-#(define (placehold-voices-and-lyrics! placeholderMusic)
-  "Fix voices and their lyrics behaviour with placeholder music"
-  (for-each
-      (lambda (voice-prefix)
-        (define voice-lyrics (cartesian (list voice-prefix) lyrics-postfixes))
-        (define voice-is-empty (eq? (get-id voice-prefix) #f))
-        (if voice-is-empty 
-          (ly:parser-define! (string->symbol voice-prefix) placeholderMusic)
-          (for-each
-            (lambda (voice-lyric)
-              (fix-voice-lyric! voice-lyric placeholderMusic))
-            voice-lyrics)
-        )
-      )
-      voice-prefixes))

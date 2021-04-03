@@ -1,10 +1,9 @@
 \version "2.22.0"
-\include "satb_parts/satb_header.ily"
+\include "satb_parts/satb-header.ly"
 \include "global.ily"
 
-Key = {  
-  \key VAR_KEY_MAJOR \major 
-}
+keyMajor = VAR_KEY_MAJOR_BEGIN
+endKeyMajor = VAR_KEY_MAJOR_END
 
-partTimeSignature = \time VAR_TIME_BEGIN
-endPartTimeSignature = \time VAR_TIME_END
+timeSignature = \time VAR_TIME_BEGIN
+endTimeSignature = \time VAR_TIME_END

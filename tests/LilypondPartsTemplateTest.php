@@ -16,9 +16,9 @@ class LilypondPartsTemplateTest extends TestCase
         $src = new LilypondPartsTemplate('globalProperty = { c }');
 
         $srcStr = (string)$src;
-        $this->assertStringContainsString('\include "satb_parts/satb_header.ily"', $srcStr);
+        $this->assertStringContainsString('\include "satb_parts/satb-header.ly"', $srcStr);
         // $this->assertStringContainsString('\include "global.ly"', $srcStr);
-        $this->assertStringContainsString('\include "satb_parts/satb_footer.ily"', $srcStr);
+        $this->assertStringContainsString('\include "satb_parts/satb-footer.ly"', $srcStr);
 
         $this->assertContains('global.ily', array_keys($src->getIncludeFilesString()));
         $this->assertContains('satb_parts/base-tkit.ly', array_keys($src->getIncludeFiles()));

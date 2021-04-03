@@ -2,3 +2,5 @@ font = #"VAR_FONT_NAME"
 chordFont = #"VAR_CHORD_FONT_NAME"
 fontSize = VAR_FONT_SIZE
 chordFontSize = VAR_CHORD_FONT_SIZE
+
+\include "satb_parts/font-layout.ly"

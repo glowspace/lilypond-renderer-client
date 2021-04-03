@@ -1,0 +1,2 @@
+% sjednoti pomlky pro vicehlasy
+\layout { \context { \Staff \consists "Merge_rests_engraver" } }

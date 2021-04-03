@@ -1,4 +1,4 @@
 \version "2.22.0"
 
-\include "satb_parts/satb_header.ily"
+\include "satb_parts/satb-header.ly"
 globalRender = ##t

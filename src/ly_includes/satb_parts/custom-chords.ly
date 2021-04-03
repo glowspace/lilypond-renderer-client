@@ -61,6 +61,7 @@ chExceptions = #(append
 \layout {
   \context {
     \ChordNames {
+      \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.padding = #0.7
       \set chordRootNamer = #MyChordNames
       \set majorSevenSymbol = \markup { maj }		% mění zobrazení maj akordů
       \set additionalPitchPrefix = #"add"
