@@ -10,7 +10,9 @@ class LilypondSrc
 {
     protected array $fragmentSections = [
         'header' => [],
+        'pre-src' => [],
         'src' => [],
+        'post-src' => [],
         'footer_vars' => [],
         'footer' => [],
     ];
