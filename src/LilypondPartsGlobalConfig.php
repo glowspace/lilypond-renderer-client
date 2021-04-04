@@ -17,6 +17,11 @@ class LilypondPartsGlobalConfig
     protected $chordFontSize = 1.5;
     protected $version;
 
+    protected $paperType = 'CUSTOM';
+    protected $paperWidthMm = 120;
+    protected $indent = 0;
+    protected $topMargin = 1;
+
     public function __construct(string $version = '2.22.0',
                                 bool $two_voices_per_staff = true, 
                                 bool $hide_chords = false,
@@ -44,6 +49,19 @@ class LilypondPartsGlobalConfig
     {
         $this->chordFont = $font;
         $this->chordFontSize = $fontSize;
+    }
+
+    public function setCustomPaper($paper_width = 120)
+    {
+        $this->paperType = 'CUSTOM';
+        $this->paperWidthMm = $paper_width;
+    }
+
+    public function setPaper($paper, $indent, $top_margin)
+    {
+        $this->paperType = $paper;
+        $this->indent = $indent;
+        $this->topMargin = $top_margin;
     }
 
 
@@ -87,5 +105,18 @@ class LilypondPartsGlobalConfig
             'VAR_CHORD_FONT_NAME' => $this->chordFont,
             'VAR_CHORD_FONT_SIZE' => $this->chordFontSize
         ]);
+
+        // paper
+        if ($this->paperType == 'CUSTOM') {
+            $global_src->withFragmentStub('parts/custom_paper', 'header', [
+                'VAR_WIDTH_MM' => $this->paperWidthMm
+            ]);
+        } else {
+            $global_src->withFragmentStub('parts/paper', 'header', [
+                'VAR_PAPER_SIZE' => $this->paper,
+                'VAR_INDENT' => $this->indent,
+                'VAR_TOP_MARGIN' => $this->topMargin
+            ]);
+        }
     }
 }
