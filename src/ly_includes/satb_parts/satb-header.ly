@@ -61,9 +61,7 @@
 '("totalScoreObject"
   "timeSignature" "lastTimeSignature" "endTimeSignature"
   "keyMajor" "endKeyMajor" "lastTransposedKeyMajor"
-  "hideChords" 
   "twoVoicesPerStaff"
-  "onlySolo"
   "partTranspose"
   "breakBefore") #f)
 

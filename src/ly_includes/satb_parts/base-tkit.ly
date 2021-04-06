@@ -79,6 +79,7 @@
    '("InstrumentName"
      "MidiInstrument"
      ""
+     "Hide"
      "ShortInstrumentName"))
 
 #(define variable-names
@@ -140,3 +141,11 @@
    (define-missing-variables! (append
                                   all-music-lyrics-names
                                   variable-names) #t))
+
+#(define (hide-voices! prefixes lyrics-postfixes)
+  (for-each (lambda (voice-prefix)
+      (define should-hide (make-id voice-prefix "Hide"))
+      (define all-voice-variables (cartesian (list voice-prefix) (append lyrics-postfixes '(""))))
+        (if should-hide 
+          (define-missing-variables! all-voice-variables #t)
+    )) prefixes))

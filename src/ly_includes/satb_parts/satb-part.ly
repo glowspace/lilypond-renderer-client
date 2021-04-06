@@ -5,6 +5,10 @@
   satb-lyrics-postfixes
   satb-lyrics-variable-names)
 
+% sets voices-to-be-hidden and their lyrics to false
+#(hide-voices! satb-voice-prefixes satb-lyrics-postfixes)
+
+
 % defined by user
 
 % TIME SIGNATURE handling

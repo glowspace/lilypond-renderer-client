@@ -24,7 +24,7 @@
 make-chords =
 #(define-music-function (name) (voice-prefix?)
    (define music (make-id name ""))
-   (if (and music (not hideChords))
+   (if music
        #{
          \context ChordNames = #(string-append name "") \with { alignAboveContext = #"SoloStaff"} {
            #music
