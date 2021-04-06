@@ -1,3 +1,2 @@
-hideChords = VAR_HIDE_CHORDS
 twoVoicesPerStaff = VAR_TWO_VOICES_PER_STAFF
 globalTransposeRelativeC = VAR_GLOBAL_TRANSPOSE_RELATIVE_C

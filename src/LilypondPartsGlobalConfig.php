@@ -22,16 +22,16 @@ class LilypondPartsGlobalConfig
     protected $indent = 0;
     protected $topMargin = 1;
 
+    protected $voices_hidden = []; // solo, akordy, sopran, alt, tenor, bas
+
     public function __construct(string $version = '2.22.0',
-                                bool $two_voices_per_staff = true, 
-                                bool $hide_chords = false,
+                                bool $two_voices_per_staff = true,
                                 $global_transpose_relative_c = false,
                                 bool $merge_rests = true,
                                 bool $hide_bar_numbers = true,
                                 bool $force_part_breaks = false)
     {
         $this->two_voices_per_staff = $two_voices_per_staff;
-        $this->hide_chords = $hide_chords;
         $this->global_transpose_relative_c = $global_transpose_relative_c;
         $this->merge_rests = $merge_rests;
         $this->hide_bar_numbers = $hide_bar_numbers;
@@ -64,6 +64,11 @@ class LilypondPartsGlobalConfig
         $this->topMargin = $top_margin;
     }
 
+    public function setVoicesHidden(array $voices_hidden)
+    {
+        $this->voices_hidden = $voices_hidden;
+    }
+
 
     // ------------- used by LilypondPartsTemplate --------------------
 
@@ -87,9 +92,14 @@ class LilypondPartsGlobalConfig
     {
         $global_src->withFragmentStub('parts/global_config', 'header', [
             'VAR_TWO_VOICES_PER_STAFF' => $this->two_voices_per_staff,
-            'VAR_HIDE_CHORDS' => $this->hide_chords,
             'VAR_GLOBAL_TRANSPOSE_RELATIVE_C' => $this->global_transpose_relative_c,
         ]);
+
+        foreach ($this->voices_hidden as $voice_name) {
+            $global_src->withFragmentStub('parts/hide_voice', 'header', [
+                'VAR_VOICE_NAME' => $voice_name
+            ]);
+        }
 
         if ($this->merge_rests) {
             $global_src->withFragmentStub('parts/merge_rests', 'header');

@@ -1,0 +1,1 @@
+VAR_VOICE_NAMEHide = ##t

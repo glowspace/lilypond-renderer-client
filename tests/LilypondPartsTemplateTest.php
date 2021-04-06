@@ -44,7 +44,8 @@ class LilypondPartsTemplateTest extends TestCase
 
     public function testCustomGlobalConfig()
     {
-        $config = new LilypondPartsGlobalConfig('2.22.0', false, true, 'g', false, false, true);
+        $config = new LilypondPartsGlobalConfig('2.22.0', false, 'g', false, false, true);
+        $config->setVoicesHidden(['akordy']);
 
         $src = new LilypondPartsTemplate('', $config);
 
@@ -54,6 +55,6 @@ class LilypondPartsTemplateTest extends TestCase
         $this->assertContains('\version "2.22.0"', (string)$src);
         $this->assertStringContainsString('twoVoicesPerStaff = ##f', $src->getIncludeFilesString()['global.ily']);
         $this->assertStringContainsString('globalTransposeRelativeC = g', $src->getIncludeFilesString()['global.ily']);
-        $this->assertStringContainsString('hideChords = ##t', $src->getIncludeFilesString()['global.ily']);
+        $this->assertStringContainsString('akordyHide = ##t', $src->getIncludeFilesString()['global.ily']);
     }
 }
