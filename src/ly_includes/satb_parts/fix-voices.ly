@@ -5,7 +5,7 @@
       (ly:parser-define! sym #{ { $val $placeholderMusic } #} )
       (ly:parser-define! sym placeholderMusic)))
 
-#(define (placehold-voices-and-lyrics! placeholderMusic)
+#(define (placehold-voices-and-lyrics! placeholderMusic voice-prefixes)
   "Fix voices and their lyrics behaviour with placeholder music.
   Note that for lyrics we need to use unfoldrepeats to fix behaviour with repeats"
   (let 

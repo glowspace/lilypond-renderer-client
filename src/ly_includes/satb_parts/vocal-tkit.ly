@@ -40,8 +40,8 @@ make-one-voice-vocal-staff =
       (make-music 'SequentialMusic 'void #t)))
 
 make-two-voice-vocal-staff =
-#(define-music-function (name clef v1name v2name)
-   (voice-prefix? string? voice-prefix? voice-prefix?)
+#(define-music-function (name clef v1name v2name lyr-above)
+   (voice-prefix? string? voice-prefix? voice-prefix? boolean?)
 
   "Make a vocal staff with two voices and lyrics above and below
      name: the prefix to the staff name
@@ -56,20 +56,21 @@ make-two-voice-vocal-staff =
    (delq! #f
     (list
      (make-two-voice-staff name clef v1name v2name)
+
+     (and v2music
+          (make-simultaneous-music
+            (map
+             (lambda (lyrics-postfix)
+               (make-one-stanza "Below" name v2name lyrics-postfix))
+             (reverse lyrics-postfixes))))
+
      (and v1music
           (make-simultaneous-music
            (map
             (lambda (lyrics-postfix)
-              (make-one-stanza "Above" name v1name lyrics-postfix))
-            lyrics-postfixes)))
-
-     (and v2music
-          (make-simultaneous-music
-           (reverse
-            (map
-             (lambda (lyrics-postfix)
-               (make-one-stanza "Below" name v2name lyrics-postfix))
-             lyrics-postfixes))))))))
+              (make-one-stanza (if lyr-above "Above" "Below") name v1name lyrics-postfix))
+            (if lyr-above lyrics-postfixes (reverse lyrics-postfixes)))))
+    ))))
 
 make-two-vocal-staves-with-stanzas =
 #(define-music-function
@@ -90,7 +91,7 @@ The number of stanzas is determined by the number of populated verse names.
   (make-simultaneous-music
    (list
     (make-two-voice-vocal-staff
-     upperName upperClef v1name v2name)
+     upperName upperClef v1name v2name #t)
     (make-simultaneous-music
      (map
       (lambda (verse-name)
@@ -98,13 +99,13 @@ The number of stanzas is determined by the number of populated verse names.
          upperName v1name v2name verse-name))
         verses))
     (make-two-voice-vocal-staff
-     lowerName lowerClef v3name v4name))))
+     lowerName lowerClef v3name v4name #t))))
 
 
 make-one-voice-vocal-staff-fixed =
 #(define-music-function (name clef)
   (voice-prefix? string?)
-    (make-two-voice-vocal-staff name clef "empty" name))
+    (make-two-voice-vocal-staff name clef name "empty" #f))
 
   % (make-two-vocal-staves-with-stanzas
   %   name clef "empty" clef

@@ -7,6 +7,7 @@
 \include "fix-voices.ly"
 \include "tiny-notes.ly"
 
+
 #(define satb-voice-prefixes
    ;; These define the permitted prefixes to various names.
    ;; They are combined with a fixed set of postfixes to form
@@ -18,9 +19,14 @@
      "solo"
      "sopran"
      "tenor"
-     "zeny"
+     "akordy"
+     "zeny")) %do not use the empty variable
+
+% those won't be placeholded but need to be defined as voicePrefixes
+#(define satb-voice-prefixes-extra
+   '("soloII"
      "empty"
-     "akordy")) %do not use the empty variable
+   ))
 
 #(define satb-lyrics-postfixes
    ;; These define the permitted postfixes to the names of lyrics.
@@ -39,6 +45,8 @@
     "TextIX"
     "TextX"))
 
+
+% this is not used here, kept for legacy
 #(define satb-lyrics-variable-names
    ;; These define the names which may be used to specify stanzas
    ;; which go between the two two-voice staves when TwoVoicesPerStaff
@@ -54,8 +62,8 @@
   }
 }
 
-% soloDruhy is the only voice variable defined outside the normal list of voice variables
-#(define-missing-variables! '("soloDruhy") #t)
+% soloMale is the only voice variable defined outside the normal list of voice variables
+#(define-missing-variables! '("soloMale" "soloTextAbove") #t)
 
 #(define-missing-variables! 
 '("totalScoreObject"

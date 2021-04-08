@@ -1,12 +1,13 @@
 % defined in satb_header.ly
 
 #(set-music-definitions!
-  satb-voice-prefixes
+  (append satb-voice-prefixes satb-voice-prefixes-extra)
   satb-lyrics-postfixes
   satb-lyrics-variable-names)
 
 % sets voices-to-be-hidden and their lyrics to false
-#(hide-voices! satb-voice-prefixes satb-lyrics-postfixes)
+#(hide-voices! (append satb-voice-prefixes satb-voice-prefixes-extra)
+  satb-lyrics-postfixes)
 
 
 % defined by user
@@ -20,7 +21,7 @@
 #(if (and (not Time) zeny)
       (set! Time #{ \vynech \zeny #}))  
 
-#(placehold-voices-and-lyrics! Time)
+#(placehold-voices-and-lyrics! Time satb-voice-prefixes)
 
 
 Time = #(if breakBefore #{ { \bar "" \break \Time } #})
@@ -67,8 +68,8 @@ keyNotChanged = #(and lastTransposedKeyMajor (equal?
   (set! lastTransposedKeyMajor transposedKeyMajor))
 
 
-#(if (and soloDruhy solo)
-      (set! solo #{ \addNoteSmall -2 \solo \soloDruhy #}))
+#(if (and soloMale solo)
+      (set! solo #{ \addNoteSmall -2 \solo \soloMale #}))
 
 
 % ensure empty `is` empty
@@ -80,7 +81,7 @@ SATB =
 <<
   \context Staff = "SoloStaff" << 
     \make-chords "akordy"
-    \make-one-voice-vocal-staff-fixed "solo" "treble"
+    \make-two-voice-vocal-staff "solo" "treble" "solo" "soloII" \soloTextAbove
   >>
   \context ChoirStaff <<
     \make-one-voice-vocal-staff "zeny" "treble"
