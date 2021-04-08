@@ -10,6 +10,7 @@ class LilypondPartsGlobalConfig
     protected $merge_rests;
     protected $hide_bar_numbers;
     protected $force_part_breaks;
+    protected $note_splitting;
 
     protected $font = 'amiri';
     protected $fontSize = 2.5;
@@ -29,7 +30,8 @@ class LilypondPartsGlobalConfig
                                 $global_transpose_relative_c = false,
                                 bool $merge_rests = true,
                                 bool $hide_bar_numbers = true,
-                                bool $force_part_breaks = false)
+                                bool $force_part_breaks = false,
+                                bool $note_splitting = true)
     {
         $this->two_voices_per_staff = $two_voices_per_staff;
         $this->global_transpose_relative_c = $global_transpose_relative_c;
@@ -37,6 +39,7 @@ class LilypondPartsGlobalConfig
         $this->hide_bar_numbers = $hide_bar_numbers;
         $this->force_part_breaks = $force_part_breaks;
         $this->version = $version;
+        $this->note_splitting = $note_splitting;
     }
 
     public function setFont($font, $fontSize)
@@ -107,6 +110,10 @@ class LilypondPartsGlobalConfig
 
         if ($this->hide_bar_numbers) {
             $global_src->withFragmentStub('parts/hide_bar_numbers', 'header');
+        }
+        
+        if ($this->note_splitting) {
+            $global_src->withFragmentStub('parts/note_splitting', 'header');
         }
 
         $global_src->withFragmentStub('parts/font', 'header', [
