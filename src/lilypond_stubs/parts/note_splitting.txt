@@ -2,9 +2,12 @@
     \context {
       \Voice
       % Automatic note splitting http://lilypond.org/doc/v2.22/Documentation/notation/displaying-rhythms#automatic-note-splitting
+      % this was edited to be idempotent as it may be included multiple times
       \remove "Note_heads_engraver"
+      \remove "Completion_heads_engraver"
       \consists "Completion_heads_engraver"
       \remove "Rest_engraver"
+      \remove "Completion_rest_engraver"
       \consists "Completion_rest_engraver"
     }
 }
