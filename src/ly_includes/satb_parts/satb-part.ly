@@ -12,8 +12,9 @@
 
 % defined by user
 
-% TIME SIGNATURE handling
 
+% this is probably not necessary
+% we can use #(placehold-voices-and-lyrics! with the voice directly
 #(if (and (not Time) solo)
       (set! Time #{ \vynech \solo #}))
 #(if (and (not Time) sopran)
@@ -23,9 +24,14 @@
 
 #(placehold-voices-and-lyrics! Time satb-voice-prefixes)
 
+% set Time to UNDEFINED until the troubles have been resolved
+Time = #(if #f Time)
 
+% causes trouble when the part starts with \partial
 Time = #(if breakBefore #{ { \bar "" \break \Time } #})
 
+
+% TIME SIGNATURE handling
 timeSignatureNotChanged = #(equal? timeSignature lastTimeSignature)
 
 % include time_signature when different from lastTimeSignature
