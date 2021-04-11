@@ -1,7 +1,7 @@
 <?php
 
 use Orchestra\Testbench\TestCase;
-use ProScholy\LilypondRenderer\LilypondPartsGlobalConfig;
+use ProScholy\LilypondRenderer\LilypondPartsRenderConfig;
 use ProScholy\LilypondRenderer\LilypondPartsTemplate;
 // use ProScholy\LilypondRenderer\LilypondSrc;
 
@@ -44,7 +44,7 @@ class LilypondPartsTemplateTest extends TestCase
 
     public function testCustomGlobalConfig()
     {
-        $config = new LilypondPartsGlobalConfig('2.22.0', false, 'g', false, false, true);
+        $config = new LilypondPartsRenderConfig('2.22.0', false, 'g', false, false, true);
         $config->setVoicesHidden(['akordy']);
 
         $src = new LilypondPartsTemplate('', $config);

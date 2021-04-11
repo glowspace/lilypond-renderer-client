@@ -4,13 +4,13 @@ namespace ProScholy\LilypondRenderer;
 
 class LilypondPartsTemplate extends LilypondSrc
 {
-    protected LilypondPartsGlobalConfig $config;
+    protected LilypondPartsRenderConfig $config;
 
-    public function __construct(string $global_src = '', ?LilypondPartsGlobalConfig $config = null, bool $include_template_files = true)
+    public function __construct(string $global_src = '', ?LilypondPartsRenderConfig $config = null, bool $include_template_files = true)
     {
         parent::__construct('');
 
-        $this->config = $config ?? new LilypondPartsGlobalConfig();
+        $this->config = $config ?? new LilypondPartsRenderConfig();
 
         $this->withFragmentStub('parts/total_header', 'header', [
             'VAR_LILYPOND_VERSION' => $this->config->getLilypondVersion()

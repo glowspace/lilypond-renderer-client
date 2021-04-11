@@ -2,7 +2,7 @@
 
 namespace ProScholy\LilypondRenderer;
 
-class LilypondPartsGlobalConfig
+class LilypondPartsRenderConfig
 {
     // as defined in the parts/paper_define_custom_size stub
     const CUSTOM_PAPER_SIZE = 'custom-paper';
@@ -21,7 +21,7 @@ class LilypondPartsGlobalConfig
     protected $chordFontSize = 1.5;
     protected $version;
 
-    protected $paperType = LilypondPartsGlobalConfig::CUSTOM_PAPER_SIZE;
+    protected $paperType = LilypondPartsRenderConfig::CUSTOM_PAPER_SIZE;
     protected $paperWidthMm = 120;
     protected $indent = 0;
     protected $topMargin = 1;
@@ -62,7 +62,7 @@ class LilypondPartsGlobalConfig
 
     public function setCustomPaper($paper_width = 120)
     {
-        $this->paperType = LilypondPartsGlobalConfig::CUSTOM_PAPER_SIZE;
+        $this->paperType = LilypondPartsRenderConfig::CUSTOM_PAPER_SIZE;
         $this->paperWidthMm = $paper_width;
     }
 
@@ -135,7 +135,7 @@ class LilypondPartsGlobalConfig
         ]);
 
         // paper
-        if ($this->paperType == LilypondPartsGlobalConfig::CUSTOM_PAPER_SIZE) {
+        if ($this->paperType == LilypondPartsRenderConfig::CUSTOM_PAPER_SIZE) {
             $global_src->withFragmentStub('parts/paper_define_custom_size', 'header', [
                 'VAR_WIDTH_MM' => $this->paperWidthMm
             ]);
