@@ -1,7 +1,0 @@
-% nastaveni vlastni velikosti papiru
-#(set! paper-alist (cons '("my size" . (cons (* VAR_WIDTH_MM mm) (* 3000 in))) paper-alist))
-\paper {
-  #(set-paper-size "my size")
-  indent = 0
-  top-margin = 1
-}

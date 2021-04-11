@@ -1,6 +1,6 @@
-% nastaveni vlastni velikosti papiru
 \paper {
   #(set-paper-size "VAR_PAPER_SIZE")
   indent = VAR_INDENT
   top-margin = VAR_TOP_MARGIN
+  system-system-spacing.padding = VAR_SYSTEM_PADDING
 }

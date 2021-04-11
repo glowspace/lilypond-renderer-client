@@ -4,6 +4,9 @@ namespace ProScholy\LilypondRenderer;
 
 class LilypondPartsGlobalConfig
 {
+    // as defined in the parts/paper_define_custom_size stub
+    const CUSTOM_PAPER_SIZE = 'custom-paper';
+
     protected $two_voices_per_staff;
     protected $hide_chords;
     protected $global_transpose_relative_c;
@@ -18,10 +21,13 @@ class LilypondPartsGlobalConfig
     protected $chordFontSize = 1.5;
     protected $version;
 
-    protected $paperType = 'CUSTOM';
+    protected $paperType = LilypondPartsGlobalConfig::CUSTOM_PAPER_SIZE;
     protected $paperWidthMm = 120;
     protected $indent = 0;
     protected $topMargin = 1;
+    // this is only a part of spacing config as the others do not influence the layout on infinite paper
+    // see https://lilypond.org/doc/v2.19/Documentation/notation/flexible-vertical-spacing-paper-variables
+    protected $systemPadding = 2;
 
     protected $voices_hidden = []; // solo, akordy, sopran, alt, tenor, bas
 
@@ -56,7 +62,7 @@ class LilypondPartsGlobalConfig
 
     public function setCustomPaper($paper_width = 120)
     {
-        $this->paperType = 'CUSTOM';
+        $this->paperType = LilypondPartsGlobalConfig::CUSTOM_PAPER_SIZE;
         $this->paperWidthMm = $paper_width;
     }
 
@@ -65,6 +71,11 @@ class LilypondPartsGlobalConfig
         $this->paperType = $paper;
         $this->indent = $indent;
         $this->topMargin = $top_margin;
+    }
+
+    public function setSystemPadding($system_padding = 2)
+    {
+        $this->systemPadding = $system_padding;
     }
 
     public function setVoicesHidden(array $voices_hidden)
@@ -124,16 +135,17 @@ class LilypondPartsGlobalConfig
         ]);
 
         // paper
-        if ($this->paperType == 'CUSTOM') {
-            $global_src->withFragmentStub('parts/custom_paper', 'header', [
+        if ($this->paperType == LilypondPartsGlobalConfig::CUSTOM_PAPER_SIZE) {
+            $global_src->withFragmentStub('parts/paper_define_custom_size', 'header', [
                 'VAR_WIDTH_MM' => $this->paperWidthMm
             ]);
-        } else {
-            $global_src->withFragmentStub('parts/paper', 'header', [
-                'VAR_PAPER_SIZE' => $this->paper,
-                'VAR_INDENT' => $this->indent,
-                'VAR_TOP_MARGIN' => $this->topMargin
-            ]);
         }
+
+        $global_src->withFragmentStub('parts/paper', 'header', [
+            'VAR_PAPER_SIZE' => $this->paperType,
+            'VAR_INDENT' => $this->indent,
+            'VAR_TOP_MARGIN' => $this->topMargin,
+            'VAR_SYSTEM_PADDING' => $this->systemPadding
+        ]);
     }
 }

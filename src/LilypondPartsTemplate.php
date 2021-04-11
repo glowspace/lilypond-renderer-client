@@ -44,6 +44,9 @@ class LilypondPartsTemplate extends LilypondSrc
             'VAR_TIME_BEGIN' => $time_signature,
             'VAR_TIME_END' => $end_time_signature ?? $time_signature
         ])->withFragmentStub('parts/part_footer', 'footer');
+        
+        $partSrc->withFragmentStub('parts/divider', 'pre-src', ['VAR_DIVIDER_TEXT' => 'ZAČÁTEK NOT']);
+        $partSrc->withFragmentStub('parts/divider', 'post-src', ['VAR_DIVIDER_TEXT' => 'KONEC NOT']);
 
         // include the part in the final zip
         $this->withIncludeFileString("$name.ly", (string)$partSrc);
@@ -51,7 +54,6 @@ class LilypondPartsTemplate extends LilypondSrc
         // add the \include directive to the total score file
         // this depends on the global config 
         // (so far only one such exists)
-        // todo: add more part_include files for different layouts
         $this->withFragmentStub($this->config->getPartIncludeStub(), 'src', [
             'VAR_PART_FILE' => "$name.ly",
             'VAR_BREAK_BEFORE' => $break_before || $this->config->getForcePartBreaks(),
