@@ -192,4 +192,14 @@ class LilypondRendererClientTest extends TestCase
 
         file_put_contents('logs/score.zip', $src->getZippedSrcStream());
     }
+
+    public function testBasicLilypondPdf()
+    {
+        $res = $this->client->render('{ c }', 'pdf');
+
+        $this->assertIsString($res->getTmp());
+        $this->assertIsArray($res->getContents());
+
+        $this->assertTrue($res->isSuccessful());
+    }
 }

@@ -14,6 +14,7 @@ class RenderResult
         'svgcrop' => 'score_cropped.svg',
         'svg' => 'score.svg',
         'eps' => 'score.eps',
+        'pdf' => 'score.pdf',
         'pdfcrop' => 'score_cropped.pdf',
         'pngcrop' => 'score_cropped.png',
         'svgcropcurves' => 'score_cropped_curves.svg'
