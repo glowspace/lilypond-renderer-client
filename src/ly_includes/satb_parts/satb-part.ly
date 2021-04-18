@@ -10,9 +10,6 @@
   satb-lyrics-postfixes)
 
 
-% defined by user
-
-
 % this is probably not necessary
 % we can use #(placehold-voices-and-lyrics! with the voice directly
 #(if (and (not Time) solo)
@@ -25,7 +22,7 @@
 #(placehold-voices-and-lyrics! Time satb-voice-prefixes)
 
 
-% get end key and end time signature
+% get end key and end time signature directly from music data
 #(define (get-last-key-pitch music defaultKey)
    (let ((keyslist (reverse (extract-named-music music 'KeyChangeEvent))))
      (if (pair? keyslist)
@@ -162,16 +159,16 @@ scmidi = #(if (and have-music (not globalRender))
             } 
         #})
 
-\book {
-  \scprint
-  \scmidi
-}
+\scprint
+
+% \book {
+%   \scprint
+%   \scmidi
+% }
 
 
 #(reset-properties!)
 
 % reset variables to false, so that they don't influence the next parts
-#(define-missing-variables! '("endTimeSignature") #t)
-#(define-missing-variables! '("endKeyMajor") #t)
 #(define-missing-variables! '("partTranspose") #t)
 #(define-missing-variables! '("breakBefore") #t)
