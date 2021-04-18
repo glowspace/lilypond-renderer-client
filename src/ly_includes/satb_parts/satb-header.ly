@@ -57,8 +57,7 @@
 \layout {
   \context {
     \Staff
-    \override VerticalAxisGroup.remove-empty = ##t
-    \override VerticalAxisGroup.remove-first = ##t
+    \RemoveAllEmptyStaves
   }
 }
 

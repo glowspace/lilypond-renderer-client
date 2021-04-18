@@ -3,7 +3,4 @@
 \include "global.ily"
 
 keyMajor = VAR_KEY_MAJOR_BEGIN
-endKeyMajor = VAR_KEY_MAJOR_END
-
 timeSignature = \time VAR_TIME_BEGIN
-endTimeSignature = \time VAR_TIME_END

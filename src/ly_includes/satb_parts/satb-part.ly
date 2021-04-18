@@ -24,6 +24,25 @@
 
 #(placehold-voices-and-lyrics! Time satb-voice-prefixes)
 
+
+% get end key and end time signature
+#(define (get-last-key-pitch music defaultKey)
+   (let ((keyslist (reverse (extract-named-music music 'KeyChangeEvent))))
+     (if (pair? keyslist)
+         (ly:music-property (car keyslist) 'tonic)
+         (ly:music-deep-copy defaultKey))
+     ))
+
+#(define (get-last-time-signature music defaultTime)
+   (let ((keyslist (reverse (extract-named-music music 'TimeSignatureMusic))))
+     (if (pair? keyslist)
+         (ly:music-deep-copy (car keyslist))
+         (ly:music-deep-copy defaultTime))
+     ))
+
+endKeyMajor = #(get-last-key-pitch solo keyMajor)
+endTimeSignature = #(get-last-time-signature solo timeSignature)
+
 % set Time to UNDEFINED until the troubles have been resolved
 Time = #(if #f Time)
 
@@ -41,9 +60,7 @@ Time = #(if timeSignatureNotChanged Time
       \Time
     } #})
 
-#(if endTimeSignature 
-  (set! lastTimeSignature endTimeSignature) 
-  (set! lastTimeSignature timeSignature))
+#(set! lastTimeSignature endTimeSignature)
 
 
 % KEY SIGNATURE handling
@@ -54,7 +71,7 @@ Time = #(if timeSignatureNotChanged Time
 
 % helper variables
 transposedKeyMajor = \transpose \keyMajor \partTranspose \keyMajor
-transposedEndKeyMajor = #(if endKeyMajor #{ \transpose \keyMajor \partTranspose \endKeyMajor #})
+transposedEndKeyMajor = \transpose \keyMajor \partTranspose \endKeyMajor
 
 % helper function to get only the pitch
 #(define (get-transposed-music-pitch music)
@@ -69,9 +86,7 @@ keyNotChanged = #(and lastTransposedKeyMajor (equal?
     (get-transposed-music-pitch transposedKeyMajor)
     (get-transposed-music-pitch lastTransposedKeyMajor)))
 
-#(if endKeyMajor 
-  (set! lastTransposedKeyMajor transposedEndKeyMajor) 
-  (set! lastTransposedKeyMajor transposedKeyMajor))
+#(set! lastTransposedKeyMajor transposedEndKeyMajor)
 
 
 #(if (and soloMale solo)
@@ -120,10 +135,38 @@ totalScoreObject = {
 
 #(define-missing-variables! '("globalRender") #f)
 
-sc = #(if (and have-music (not globalRender))
-        #{  \score { \SATB \layout { $(if Layout Layout) } } #})
-  
-\sc
+\tagGroup #'(print play)
+
+scprint = #(if (and have-music (not globalRender))
+        #{  
+            \score {
+              \keepWithTag #'play
+              \SATB
+              \layout { 
+                $(if Layout Layout)
+              }
+            }
+        #})
+
+scmidi = #(if (and have-music (not globalRender))
+        #{  
+            \score {
+              \keepWithTag #'play
+              \SATB
+              \midi {
+                \context {
+                  \Score
+                  midiChannelMapping = #'instrument
+                }
+              }
+            } 
+        #})
+
+\book {
+  \scprint
+  \scmidi
+}
+
 
 #(reset-properties!)
 

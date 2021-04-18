@@ -7,19 +7,22 @@ totalScoreObject = \transpose c \globalTransposeRelativeC \totalScoreObject
 
 \tagGroup #'(print play)
 
-\score {
-  \keepWithTag #'print
-  \totalScoreObject
-  \layout { $(if Layout Layout) }
-}
-
-\score {
-  \keepWithTag #'play
-  \totalScoreObject
-  \midi {
-    \context {
-      \Score
-      midiChannelMapping = #'instrument
-    }
+\book {
+  \bookOutputSuffix "total"
+  \score {
+    \keepWithTag #'print
+    \totalScoreObject
+    \layout { $(if Layout Layout) }
   }
+
+  \score {
+    \keepWithTag #'play
+    \totalScoreObject
+    \midi {
+      \context {
+        \Score
+        midiChannelMapping = #'instrument
+      }
+    }
+  } 
 }

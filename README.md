@@ -9,7 +9,7 @@ Add following to your composer.json
 
 ~~~
 "require": {
-    "proscholy/lilypond-renderer-client": "0.5.*"
+    "proscholy/lilypond-renderer-client": "0.6.*"
 },
 
 "repositories": [
