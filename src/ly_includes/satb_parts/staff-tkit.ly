@@ -54,7 +54,7 @@ make-one-voice-staff =
                  (else (substring name 0 0)))
                 "")
          }
-         midiInstrument = #(if midiName midiName "clarinet")
+         midiInstrument = #(if midiName midiName "piano")
          #(cond
            (dynUp dynamicUp)
            (dynDown dynamicDown)
@@ -138,7 +138,7 @@ make-two-voice-staff =
                    \consists "Staff_performer"
                    \dynamicUp
                    midiInstrument =
-                     #(if v1midiName v1midiName "clarinet")
+                     #(if v1midiName v1midiName "piano")
                  }
                  <<
                    #(if KeepAlive KeepAlive)
@@ -155,7 +155,7 @@ make-two-voice-staff =
                    \consists "Staff_performer"
                    \dynamicDown
                    midiInstrument =
-                     #(if v2midiName v2midiName "clarinet")
+                     #(if v2midiName v2midiName "piano")
                  }
                  <<
                    #(if KeepAlive KeepAlive)
