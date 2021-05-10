@@ -59,8 +59,6 @@ class LilypondPartsTemplateTest extends TestCase
 
         $src->withPart('sloka', 'solo = { c }');
 
-        $this->assertStringContainsString('breakBefore = ##t', (string)$src);
-        $this->assertStringContainsString('pageBreakBefore = ##f', (string)$src);
         $this->assertStringContainsString('\version "2.20.0"', (string)$src);
         $this->assertStringContainsString('twoVoicesPerStaff = ##f', $src->getIncludeFilesString()['global.ily']);
         $this->assertStringContainsString('globalTransposeRelativeC = g', $src->getIncludeFilesString()['global.ily']);

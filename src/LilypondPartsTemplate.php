@@ -31,7 +31,7 @@ class LilypondPartsTemplate extends LilypondSrc
 
     public function withPart(string $name, string $src, 
                                 $key_major = 'c', string $time_signature = '4/4',
-                                $break_before = false, $part_transpose = false, $page_break_before = false, $hide_voices = []) : self
+                                $part_transpose = false, $hide_voices = []) : self
     {
         $partSrc = new LilypondSrc($src);
 
@@ -59,8 +59,6 @@ class LilypondPartsTemplate extends LilypondSrc
         // (so far only one such exists)
         $this->withFragmentStub('parts/total_part_include', 'src', [
             'VAR_PART_FILE' => "$name.ly",
-            'VAR_BREAK_BEFORE' => $break_before || $this->config->getAttribute('force_part_breaks'),
-            'VAR_PAGE_BREAK_BEFORE' => $page_break_before,
             'VAR_PART_TRANSPOSE' => $part_transpose
         ]);
 

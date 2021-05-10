@@ -20,9 +20,6 @@ class LilypondSrc
     protected array $includeFiles;
     protected array $includeFilesString;
 
-    public const LP_BAR_SECTION = '\\bar "||"';
-    public const LP_BAR_END = '\\bar "|."';
-
     public function __construct($src, array $include_files = [])
     {
         $this->fragmentSections['src'] = [$src];
