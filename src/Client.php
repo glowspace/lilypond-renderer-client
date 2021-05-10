@@ -21,11 +21,15 @@ class Client
             if (is_null($host) || is_null($port)) {
                 throw new Exception('Both $host and $port variable need to be defined when no config (Laravel) is available.');
             }
-        }
 
-        $this->client = new HttpClient([
-            'base_uri' => $host ?? config('lilypond_renderer.host') . ':' . $port ?? config('lilypond_renderer.port')
-        ]);
+            $this->client = new HttpClient([
+                'base_uri' => $host . ':' . $port
+            ]);
+        } else {
+            $this->client = new HttpClient([
+                'base_uri' => config('lilypond_renderer.host') . ':' . config('lilypond_renderer.port')
+            ]);
+        }
     }
 
     /**
