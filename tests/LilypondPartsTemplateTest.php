@@ -52,7 +52,7 @@ class LilypondPartsTemplateTest extends TestCase
             'hide_bar_numbers' => false,
             'force_part_breaks' => true,
 
-            'voices_hidden' => ['akordy']
+            'hide_voices' => ['akordy']
         ]);
 
         $src = new LilypondPartsTemplate('', $config);

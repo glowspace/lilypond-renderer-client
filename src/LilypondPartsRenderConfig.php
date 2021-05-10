@@ -46,7 +46,7 @@ class LilypondPartsRenderConfig
             // see https://lilypond.org/doc/v2.19/Documentation/notation/flexible-vertical-spacing-paper-variables
             'system_padding' => 2,
 
-            'voices_hidden' => [] // solo, akordy, sopran, alt, tenor, bas
+            'hide_voices' => [] // solo, akordy, sopran, alt, tenor, bas
         ];
     }
 
@@ -78,11 +78,6 @@ class LilypondPartsRenderConfig
     public function setSystemPadding($system_padding = 2)
     {
         $this->render_config_data['system_padding'] = $system_padding;
-    }
-
-    public function setVoicesHidden(array $voices_hidden)
-    {
-        $this->render_config_data['voices_hidden'] = $voices_hidden;
     }
 
     /**

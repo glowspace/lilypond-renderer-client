@@ -31,7 +31,7 @@ class LilypondPartsTemplate extends LilypondSrc
 
     public function withPart(string $name, string $src, 
                                 $key_major = 'c', string $time_signature = '4/4',
-                                $break_before = false, $part_transpose = false, $page_break_before = false, $voices_hidden = []) : self
+                                $break_before = false, $part_transpose = false, $page_break_before = false, $hide_voices = []) : self
     {
         $partSrc = new LilypondSrc($src);
 
@@ -45,7 +45,7 @@ class LilypondPartsTemplate extends LilypondSrc
         $partSrc->withFragmentStub('parts/divider', 'post-src', ['VAR_DIVIDER_TEXT' => 'KONEC NOT']);
 
         // hidden voices in part apply on top of hidden voices in global config
-        foreach ($voices_hidden as $voice_name) {
+        foreach ($hide_voices as $voice_name) {
             $partSrc->withFragmentStub('parts/hide_voice', 'header', [
                 'VAR_VOICE_NAME' => $voice_name
             ]);
@@ -83,7 +83,7 @@ class LilypondPartsTemplate extends LilypondSrc
             'VAR_GLOBAL_TRANSPOSE_RELATIVE_C' => $this->config->getAttribute('global_transpose_relative_c'),
         ]);
 
-        foreach ($this->config->getAttribute('voices_hidden') as $voice_name) {
+        foreach ($this->config->getAttribute('hide_voices') as $voice_name) {
             $global_src->withFragmentStub('parts/hide_voice', 'header', [
                 'VAR_VOICE_NAME' => $voice_name
             ]);
