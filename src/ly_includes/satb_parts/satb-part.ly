@@ -44,7 +44,8 @@ endTimeSignature = #(get-last-time-signature solo timeSignature)
 Time = #(if #f Time)
 
 % causes trouble when the part starts with \partial
-Time = #(if breakBefore #{ { \bar "" \break \Time } #})
+Time = #(if pageBreakBefore #{ { \pageBreak \Time } #})
+Time = #(if (and breakBefore (not pageBreakBefore)) #{ { \break \Time } #})
 
 
 % TIME SIGNATURE handling
@@ -171,4 +172,4 @@ scmidi = #(if (and have-music (not globalRender))
 
 % reset variables to false, so that they don't influence the next parts
 #(define-missing-variables! '("partTranspose") #t)
-#(define-missing-variables! '("breakBefore") #t)
+#(define-missing-variables! '("breakBefore" "pageBreakBefore") #t)

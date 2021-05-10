@@ -20,6 +20,9 @@ class LilypondSrc
     protected array $includeFiles;
     protected array $includeFilesString;
 
+    public const LP_BAR_SECTION = '\\bar "||"';
+    public const LP_BAR_END = '\\bar "|."';
+
     public function __construct($src, array $include_files = [])
     {
         $this->fragmentSections['src'] = [$src];
@@ -80,7 +83,6 @@ class LilypondSrc
 
     public function withIncludeFileString(string $fname, string $src) : LilypondSrc
     {
-        // todo: reject if exists
         $this->includeFilesString[$fname] = $src;
         return $this;
     }
@@ -100,7 +102,7 @@ class LilypondSrc
         return $this->includeFilesString;
     }
 
-    public function __toString()
+    final public function __toString()
     {
         $finalStr = "";
         foreach (array_values($this->fragmentSections) as $section) {
@@ -111,7 +113,7 @@ class LilypondSrc
         return $finalStr;
     }
 
-    public function getZippedSrcStream()
+    final public function getZippedSrcStream()
     {
         $tempStream = fopen('php://temp', 'rw');
 

@@ -44,15 +44,24 @@ class LilypondPartsTemplateTest extends TestCase
 
     public function testCustomGlobalConfig()
     {
-        $config = new LilypondPartsRenderConfig('2.22.0', false, 'g', false, false, true);
-        $config->setVoicesHidden(['akordy']);
+        $config = new LilypondPartsRenderConfig([
+            'version' => '2.20.0',
+            'two_voices_per_staff' => false,
+            'global_transpose_relative_c' => 'g',
+            'merge_rests' => false,
+            'hide_bar_numbers' => false,
+            'force_part_breaks' => true,
+
+            'voices_hidden' => ['akordy']
+        ]);
 
         $src = new LilypondPartsTemplate('', $config);
 
         $src->withPart('sloka', 'solo = { c }');
 
-        $this->assertContains('breakBefore = ##t', (string)$src);
-        $this->assertContains('\version "2.22.0"', (string)$src);
+        $this->assertStringContainsString('breakBefore = ##t', (string)$src);
+        $this->assertStringContainsString('pageBreakBefore = ##f', (string)$src);
+        $this->assertStringContainsString('\version "2.20.0"', (string)$src);
         $this->assertStringContainsString('twoVoicesPerStaff = ##f', $src->getIncludeFilesString()['global.ily']);
         $this->assertStringContainsString('globalTransposeRelativeC = g', $src->getIncludeFilesString()['global.ily']);
         $this->assertStringContainsString('akordyHide = ##t', $src->getIncludeFilesString()['global.ily']);
