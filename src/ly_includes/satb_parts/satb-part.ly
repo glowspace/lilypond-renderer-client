@@ -18,6 +18,10 @@
       (set! Time #{ \vynech \sopran #}))  
 #(if (and (not Time) zeny)
       (set! Time #{ \vynech \zeny #}))  
+#(if (and (not Time) tenor)
+      (set! Time #{ \vynech \tenor #}))  
+#(if (and (not Time) muzi)
+      (set! Time #{ \vynech \muzi #}))  
 
 #(placehold-voices-and-lyrics! Time satb-voice-prefixes)
 
