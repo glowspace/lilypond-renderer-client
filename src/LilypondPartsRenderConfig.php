@@ -32,6 +32,7 @@ class LilypondPartsRenderConfig
             'hide_bar_numbers' => true,
             'force_part_breaks' => false,
             'note_splitting' => true,
+            'use_mm_rests' => false,
 
             'font' => 'amiri',
             'font_size' => 2.5,
@@ -49,37 +50,7 @@ class LilypondPartsRenderConfig
             'hide_voices' => [] // solo, akordy, sopran, alt, tenor, bas
         ];
     }
-
-    public function setFontAndSize($font, $font_size)
-    {
-        $this->render_config_data['font'] = $font;
-        $this->render_config_data['font_size'] = $font_size;
-    }
-
-    public function setChordFont($font, $font_size)
-    {
-        $this->render_config_data['chord_font'] = $font;
-        $this->render_config_data['chord_font_size'] = $font_size;
-    }
-
-    public function setCustomPaper($paper_width = 120)
-    {
-        $this->render_config_data['paper_type'] = LilypondPartsRenderConfig::CUSTOM_PAPER_SIZE;
-        $this->render_config_data['paper_width_mm'] = $paper_width;
-    }
-
-    public function setPaper($paper, $indent, $top_margin)
-    {
-        $this->render_config_data['paper_type'] = $paper;
-        $this->render_config_data['indent'] = $indent;
-        $this->render_config_data['top_margin'] = $top_margin;
-    }
-
-    public function setSystemPadding($system_padding = 2)
-    {
-        $this->render_config_data['system_padding'] = $system_padding;
-    }
-
+    
     /**
      * Get value of an attribute attr_name
      *

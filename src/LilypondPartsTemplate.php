@@ -87,16 +87,11 @@ class LilypondPartsTemplate extends LilypondSrc
             ]);
         }
 
-        if ($this->config->getAttribute('merge_rests')) {
-            $global_src->withFragmentStub('parts/merge_rests', 'header');
-        }
-
-        if ($this->config->getAttribute('hide_bar_numbers')) {
-            $global_src->withFragmentStub('parts/hide_bar_numbers', 'header');
-        }
-        
-        if ($this->config->getAttribute('note_splitting')) {
-            $global_src->withFragmentStub('parts/note_splitting', 'header');
+        // non-parametric includes (if true then stub is simply included)
+        foreach (['merge_rests', 'hide_bar_numbers', 'note_splitting', 'use_mm_rests'] as $header_config) {
+            if ($this->config->getAttribute($header_config)) {
+                $global_src->withFragmentStub("parts/$header_config", 'header');
+            }
         }
 
         // font setup

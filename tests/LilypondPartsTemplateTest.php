@@ -51,6 +51,7 @@ class LilypondPartsTemplateTest extends TestCase
             'merge_rests' => false,
             'hide_bar_numbers' => false,
             'force_part_breaks' => true,
+            'use_mm_rests' => true,
 
             'hide_voices' => ['akordy']
         ]);
@@ -61,6 +62,7 @@ class LilypondPartsTemplateTest extends TestCase
 
         $this->assertStringContainsString('\version "2.20.0"', (string)$src);
         $this->assertStringContainsString('twoVoicesPerStaff = ##f', $src->getIncludeFilesString()['global.ily']);
+        $this->assertStringContainsString('useMMRests = ##t', $src->getIncludeFilesString()['global.ily']);
         $this->assertStringContainsString('globalTransposeRelativeC = g', $src->getIncludeFilesString()['global.ily']);
         $this->assertStringContainsString('akordyHide = ##t', $src->getIncludeFilesString()['global.ily']);
     }

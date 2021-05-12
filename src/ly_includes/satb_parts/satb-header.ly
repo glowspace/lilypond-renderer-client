@@ -69,7 +69,8 @@
   "timeSignature" "lastTimeSignature" "endTimeSignature"
   "keyMajor" "endKeyMajor" "lastTransposedKeyMajor"
   "twoVoicesPerStaff"
-  "partTranspose") #f)
+  "partTranspose"
+  "useMMRests") #f)
 
 % prepare the totalScoreObject where each part "pushes" its content
 #(if (not totalScoreObject)
