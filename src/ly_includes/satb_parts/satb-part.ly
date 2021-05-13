@@ -41,8 +41,8 @@
          (ly:music-deep-copy defaultTime))
      ))
 
-endKeyMajor = #(get-last-key-pitch solo keyMajor)
-endTimeSignature = #(get-last-time-signature solo timeSignature)
+endKeyMajor = #(if solo (get-last-key-pitch solo keyMajor) keyMajor)
+endTimeSignature = #(if solo (get-last-time-signature solo timeSignature) timeSignature)
 
 % set Time to UNDEFINED until the troubles have been resolved
 Time = #(if #f Time)
