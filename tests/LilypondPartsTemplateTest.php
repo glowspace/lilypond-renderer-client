@@ -66,4 +66,16 @@ class LilypondPartsTemplateTest extends TestCase
         $this->assertStringContainsString('globalTransposeRelativeC = g', $src->getIncludeFilesString()['global.ily']);
         $this->assertStringContainsString('akordyHide = ##t', $src->getIncludeFilesString()['global.ily']);
     }
+
+    public function testIncludeFont()
+    {
+        $config = new LilypondPartsRenderConfig([
+            'include_font_files' => true
+        ]);
+
+        $src = new LilypondPartsTemplate('', $config);
+
+        $this->assertStringContainsString('#(ly:font-config-add-font "fonts/amiri.otf")', (string)$src);
+        $this->assertContains('fonts/amiri.otf', $src->getIncludeFiles());
+    }
 }

@@ -1,0 +1,1 @@
+#(ly:font-config-add-font "fonts/VAR_FONT_NAME.otf")

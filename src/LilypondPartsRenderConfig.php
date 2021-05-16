@@ -42,6 +42,8 @@ class LilypondPartsRenderConfig
             'paper_width_mm' => 120,
             'indent' => 0,
             'top_margin' => 1,
+
+            'include_font_files' => false,
             
             // this is only a part of spacing config as the others do not influence the layout on infinite paper
             // see https://lilypond.org/doc/v2.19/Documentation/notation/flexible-vertical-spacing-paper-variables
@@ -60,5 +62,10 @@ class LilypondPartsRenderConfig
     public function getAttribute(string $attr_name)
     {
         return $this->render_config_data[$attr_name];
+    }
+
+    public function getUsedFonts()
+    {
+        return array_unique([$this->getAttribute('font'), $this->getAttribute('chord_font')]);
     }
 }

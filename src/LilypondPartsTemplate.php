@@ -27,6 +27,15 @@ class LilypondPartsTemplate extends LilypondSrc
 
         $this->withFragmentStub('parts/divider', 'pre-src', ['VAR_DIVIDER_TEXT' => 'ZAČÁTEK NOT']);
         $this->withFragmentStub('parts/divider', 'post-src', ['VAR_DIVIDER_TEXT' => 'KONEC NOT']);
+
+        if (isset($config) && $config->getAttribute('include_font_files')) {
+            foreach ($config->getUsedFonts() as $font) {
+                $this->withIncludeFile("fonts/$font.otf");
+                $this->withFragmentStub('parts/include_font_file', 'header', [
+                    'VAR_FONT_NAME' => $config->getAttribute('font')
+                ]);
+            }
+        }
     }
 
     public function withPart(string $name, string $src, 
