@@ -75,7 +75,7 @@ class LilypondPartsTemplateTest extends TestCase
 
         $src = new LilypondPartsTemplate('', $config);
 
-        $this->assertStringContainsString('#(ly:font-config-add-font "fonts/amiri.otf")', (string)$src);
+        $this->assertStringContainsString('#(ly:font-config-add-font "fonts/amiri.otf")', $src->getIncludeFilesString()['global.ily']);
         $this->assertContains('fonts/amiri.otf', $src->getIncludeFiles());
     }
 }

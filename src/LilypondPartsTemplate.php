@@ -27,15 +27,6 @@ class LilypondPartsTemplate extends LilypondSrc
 
         $this->withFragmentStub('parts/divider', 'pre-src', ['VAR_DIVIDER_TEXT' => 'ZAČÁTEK NOT']);
         $this->withFragmentStub('parts/divider', 'post-src', ['VAR_DIVIDER_TEXT' => 'KONEC NOT']);
-
-        if (isset($config) && $config->getAttribute('include_font_files')) {
-            foreach ($config->getUsedFonts() as $font) {
-                $this->withIncludeFile("fonts/$font.otf");
-                $this->withFragmentStub('parts/include_font_file', 'header', [
-                    'VAR_FONT_NAME' => $config->getAttribute('font')
-                ]);
-            }
-        }
     }
 
     public function withPart(string $name, string $src, 
@@ -110,6 +101,15 @@ class LilypondPartsTemplate extends LilypondSrc
             'VAR_CHORD_FONT_NAME' => $this->config->getAttribute('chord_font'),
             'VAR_CHORD_FONT_SIZE' => $this->config->getAttribute('chord_font_size')
         ]);
+
+        if ($this->config->getAttribute('include_font_files')) {
+            foreach ($this->config->getUsedFonts() as $font) {
+                $this->withIncludeFile("fonts/$font.otf");
+                $global_src->withFragmentStub('parts/include_font_file', 'header', [
+                    'VAR_FONT_NAME' => $font
+                ]);
+            }
+        }
 
         // paper setup 
         if ($this->config->getAttribute('paper_type') == LilypondPartsRenderConfig::CUSTOM_PAPER_SIZE) {
