@@ -1,2 +1,2 @@
 % nastaveni vlastni velikosti papiru
-#(set! paper-alist (cons '("custom-paper" . (cons (* VAR_WIDTH_MM mm) (* 3000 in))) paper-alist))
+#(set! paper-alist (cons '("custom-paper" . (cons (* VAR_WIDTH_MM mm) (* 100 in))) paper-alist))
