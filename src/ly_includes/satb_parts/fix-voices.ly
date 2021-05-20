@@ -16,7 +16,7 @@
             (define voice-is-empty (eq? (get-id voice-prefix) #f))
             (define placeholder-rest (if useMMRests (mmrest-of-length placeholderMusic) (skip-of-length placeholderMusic)))
             (if voice-is-empty 
-              (ly:parser-define! (string->symbol voice-prefix) placeholder-rest)
+              (if (not disablePrefilling) (ly:parser-define! (string->symbol voice-prefix) placeholder-rest))
               (for-each
                   (lambda (voice-lyric)
                   (fix-voice-lyric! voice-lyric lyricsPlaceholder))

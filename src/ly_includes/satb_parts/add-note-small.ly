@@ -1,9 +1,8 @@
-%% http://lsr.di.unimi.it/LSR/Item?u=1&id=761
+%% Original version: http://lsr.di.unimi.it/LSR/Item?u=1&id=761
 %% see also http://lsr.di.unimi.it/LSR/Item?u=1&id=545
-
 %% version 2014/03/24
-%% see for snippet upgrade http://gillesth.free.fr/Lilypond/chord/
-%% A little doc is also provided !
+
+%% Modified by Miroslav Sery for https://github.com/proscholy
 
 #(define (noteEvent? music)
 (eq? (ly:music-property music 'name) 'NoteEvent))
@@ -12,7 +11,7 @@
 (expand-repeat-chords! (list 'rhythmic-event) music))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%  extractNote  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-#(use-modules (ice-9 receive)) %% for the use of receive
+#(use-modules (ice-9 receive))
 
 
 %%%%%%%%%%%%%%%%%%%%% addNote

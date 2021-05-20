@@ -70,7 +70,8 @@
   "keyMajor" "endKeyMajor" "lastTransposedKeyMajor"
   "twoVoicesPerStaff"
   "partTranspose"
-  "useMMRests") #f)
+  "useMMRests"
+  "disablePrefilling") #f)
 
 % prepare the totalScoreObject where each part "pushes" its content
 #(if (not totalScoreObject)
