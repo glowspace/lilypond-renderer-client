@@ -1,2 +1,2 @@
 
-Time = { VAR_LILYPOND_CODE }
+Time = { \Time VAR_LILYPOND_CODE }
