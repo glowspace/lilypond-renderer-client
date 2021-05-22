@@ -88,7 +88,7 @@ class LilypondPartsTemplate extends LilypondSrc
         }
 
         // non-parametric includes (if true then stub is simply included)
-        foreach (['merge_rests', 'hide_bar_numbers', 'note_splitting', 'use_mm_rests', 'disable_prefilling'] as $header_config) {
+        foreach (['merge_rests', 'hide_bar_numbers', 'note_splitting', 'use_mm_rests', 'disable_prefilling', 'hide_page_numbers'] as $header_config) {
             if ($this->config->getAttribute($header_config)) {
                 $global_src->withFragmentStub("parts/$header_config", 'header');
             }

@@ -34,6 +34,7 @@ class LilypondPartsRenderConfig
             'note_splitting' => true,
             'use_mm_rests' => false,
             'disable_prefilling' => false,
+            'hide_page_numbers' => true,
 
             'font' => 'amiri',
             'font_size' => 2.5,

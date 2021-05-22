@@ -100,7 +100,7 @@ class Client
      */
     public function renderSvg($lilypond_src, $crop = true) : RenderResult
     {
-        return $this->render($lilypond_src, $crop ? 'svgcrop' : 'svg');
+        return $this->render($lilypond_src, $crop ? 'svgopt' : 'svg');
     }
 
     /**

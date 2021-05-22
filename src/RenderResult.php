@@ -11,7 +11,7 @@ class RenderResult
     protected $isDeleted;
 
     protected $recipeOutputFiles = [
-        'svgcrop' => 'score_cropped.svg',
+        'svgopt' => 'score_optimized.svg',
         'svg' => 'score.svg',
         'eps' => 'score.eps',
         'pdf' => 'score.pdf',
