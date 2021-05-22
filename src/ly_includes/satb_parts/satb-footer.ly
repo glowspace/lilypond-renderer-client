@@ -3,6 +3,9 @@
 #(if (not globalTransposeRelativeC)
     (set! globalTransposeRelativeC #{ c #}))
 
+% when Time = ... is at the end (e.g. setting bars)
+totalScoreObject = #(if Time #{ { \totalScoreObject \Time } #} totalScoreObject)
+
 totalScoreObject = \transpose c \globalTransposeRelativeC \totalScoreObject
 
 \tagGroup #'(print play)

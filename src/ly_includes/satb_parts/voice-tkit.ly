@@ -26,10 +26,13 @@ make-voice =
    (define music (make-id name ""))
    (if music
        #{
-         \context Voice = #(string-append name "Voice") <<
+         \context Voice = #(string-append name "Voice") {
+         #(if Time Time )
+         <<
            #(if KeepAlive KeepAlive)
-           #(if Time Time )
+           
            #music
          >>
+         }
        #} ))
 

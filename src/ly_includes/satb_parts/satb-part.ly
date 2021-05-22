@@ -9,22 +9,28 @@
 #(hide-voices! (append satb-voice-prefixes satb-voice-prefixes-extra)
   satb-lyrics-postfixes)
 
+someMusic = ##f
 
 % this is probably not necessary
 % we can use #(placehold-voices-and-lyrics! with the voice directly
-#(if (and (not Time) solo)
-      (set! Time #{ \vynech \solo #}))
-#(if (and (not Time) sopran)
-      (set! Time #{ \vynech \sopran #}))  
-#(if (and (not Time) zeny)
-      (set! Time #{ \vynech \zeny #}))  
-#(if (and (not Time) tenor)
-      (set! Time #{ \vynech \tenor #}))  
-#(if (and (not Time) muzi)
-      (set! Time #{ \vynech \muzi #}))  
+#(if solo (set! someMusic solo))
+#(if (and (not someMusic) sopran)
+      (set! someMusic sopran))
+#(if (and (not someMusic) alt)
+      (set! someMusic alt))
+#(if (and (not someMusic) zeny)
+      (set! someMusic zeny))
+#(if (and (not someMusic) tenor)
+      (set! someMusic tenor))
+#(if (and (not someMusic) bas)
+      (set! someMusic bas))
+#(if (and (not someMusic) muzi)
+      (set! someMusic muzi))
 
-#(placehold-voices-and-lyrics! Time satb-voice-prefixes)
 
+#(if someMusic (placehold-voices-and-lyrics! someMusic satb-voice-prefixes))
+
+Time = #(if Time Time)
 
 % get end key and end time signature directly from music data
 #(define (get-last-key-pitch music defaultKey)
@@ -44,8 +50,6 @@
 endKeyMajor = #(if solo (get-last-key-pitch solo keyMajor) keyMajor)
 endTimeSignature = #(if solo (get-last-time-signature solo timeSignature) timeSignature)
 
-% set Time to UNDEFINED until the troubles have been resolved
-Time = #(if #f Time)
 
 % TIME SIGNATURE handling
 timeSignatureNotChanged = #(equal? timeSignature lastTimeSignature)

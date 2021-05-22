@@ -1,4 +1,2 @@
 
-\include "satb_parts/satb-header.ly"
-solo = { VAR_LILYPOND_CODE }
-\include "satb_parts/satb-part.ly"	
+Time = { VAR_LILYPOND_CODE }

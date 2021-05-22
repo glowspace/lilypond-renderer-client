@@ -139,13 +139,14 @@ make-two-voice-staff =
                    \dynamicUp
                    midiInstrument =
                      #(if v1midiName v1midiName "acoustic grand")
-                 }
+                 } {
+                 #(if Time Time)
                  <<
                    #(if KeepAlive KeepAlive)
-                   #(if Time Time)
                    #(if v2music voiceOne oneVoice)
                    #v1music
                  >>
+                 }
                #} )
 
              #(if v2music
@@ -156,13 +157,14 @@ make-two-voice-staff =
                    \dynamicDown
                    midiInstrument =
                      #(if v2midiName v2midiName "acoustic grand")
-                 }
+                 } {
+                 #(if Time Time)
                  <<
                    #(if KeepAlive KeepAlive)
-                   #(if Time Time)
                    #(if v1music voiceTwo oneVoice)
                    #v2music
                  >>
+                 }
                #} )
            >>
          >>
