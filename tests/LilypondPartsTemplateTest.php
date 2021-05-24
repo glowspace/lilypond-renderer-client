@@ -50,7 +50,6 @@ class LilypondPartsTemplateTest extends TestCase
             'global_transpose_relative_c' => 'g',
             'merge_rests' => false,
             'hide_bar_numbers' => false,
-            'force_part_breaks' => true,
             'use_mm_rests' => true,
 
             'hide_voices' => ['akordy']

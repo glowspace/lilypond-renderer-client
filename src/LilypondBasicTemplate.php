@@ -2,10 +2,22 @@
 
 namespace ProScholy\LilypondRenderer;
 
+/**
+ * This class represents the first version of a LilyPond template, which is no more actively supported. 
+ */
 class LilypondBasicTemplate extends LilypondSrc
 {
     protected bool $hasOriginalKey = false;
 
+    /**
+     * Apply the default layout configuration (see src/lilypond_stubs/basic/default_layout.txt)
+     *
+     * @param string $font
+     * @param float $fontSize
+     * @param string $chordFont
+     * @param float $chordFontSize
+     * @return LilypondBasicTemplate
+     */
     public function applyDefaultLayout($font = 'amiri', $fontSize = 2.5, $chordFont = 'roboto', $chordFontSize = 1.5) : LilypondBasicTemplate
     {
         return $this->setOriginalKey('c')
@@ -18,16 +30,33 @@ class LilypondBasicTemplate extends LilypondSrc
             ]);
     }
 
+    /**
+     * Apply setting of an infinite paper (see src/lilypond_stubs/basic/infinite_paper.txt)
+     *
+     * @param integer $width_mm
+     * @return LilypondBasicTemplate
+     */
     public function applyInfinitePaper($width_mm = 120) : LilypondBasicTemplate
     {
         return $this->withFragmentStub('basic/infinite_paper', 'footer', ['VAR_WIDTH_MM' => $width_mm]);
     }
 
+    /**
+     * Change the appearance of \tiny notes (see src/lilypond_stubs/basic/tinynotes.txt)
+     *
+     * @return LilypondBasicTemplate
+     */
     public function applyTinynotes() : LilypondBasicTemplate
     {
         return $this->withFragmentStub('basic/tinynotes', 'header');
     }
 
+    /**
+     * Set the original key signature
+     *
+     * @param string $key_major
+     * @return LilypondBasicTemplate
+     */
     public function setOriginalKey(string $key_major) : LilypondBasicTemplate
     {
         if (!$this->hasOriginalKey) {

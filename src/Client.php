@@ -42,7 +42,7 @@ class Client
      */
     private function make(string $recipe, string $contents, bool $is_zip = false) : RenderResult
     {
-        // todo: catch exceptions
+        // todo: throw custom exceptions
         $response = $this->client->post("make?recipe=$recipe", [
             'multipart' => [
                 [
@@ -53,7 +53,6 @@ class Client
             ]
         ]);
 
-        // todo: exception when the output is not a JSON
         return new RenderResult($recipe, json_decode($response->getBody()->getContents()));
     }
 
@@ -170,21 +169,3 @@ class Client
         return $this->client->getAsync("del?dir=$tmp");
     }
 }
-
-
-//     // private function request(string $method, string $endPoint, array $params = [])
-//     // {
-//     //     try {
-//     //         $response = $this->client->request($method, $endPoint, $params);
-//     //     } catch (RequestException $ex) {
-//     //         $resp = $ex->getResponse();
-//     //         $data = json_decode($resp->getBody()->getContents());
-
-//     //         throw new ERPApiException($data->status . ' (' . $resp->getStatusCode() . ')', $resp->getStatusCode());
-//     //     }
-
-//     //     // other possible exceptions: GuzzleHttp\Exception\ServerException (504: timed out)
-//     //     // but those should be catched in the app...I guess? 
-
-//     //     return json_decode($response->getBody()->getContents());
-//     // }

@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 class LilypondRendererServiceProvider extends ServiceProvider
 {
     /**
-    * Publishes configuration file.
+    * Publishes configuration file when included in Laravel application.
     *
     * @return  void
     */
@@ -17,7 +17,7 @@ class LilypondRendererServiceProvider extends ServiceProvider
         ], 'lilypond-renderer-config');
     }
     /**
-    * Make config publishment optional by merging the config from the package.
+    * Makes config publishing optional by merging the config from the package.
     *
     * @return  void
     */

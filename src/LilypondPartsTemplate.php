@@ -2,10 +2,19 @@
 
 namespace ProScholy\LilypondRenderer;
 
+/**
+ * This is a class responsible for generating "renderable code" witin a specific segment-wise template.
+ */
 class LilypondPartsTemplate extends LilypondSrc
 {
     protected LilypondPartsRenderConfig $config;
 
+    /**
+     * Instantiate this template.
+     *
+     * @param string $global_src
+     * @param LilypondPartsRenderConfig|null $config
+     */
     public function __construct(string $global_src = '', ?LilypondPartsRenderConfig $config = null)
     {
         parent::__construct('');
@@ -29,6 +38,17 @@ class LilypondPartsTemplate extends LilypondSrc
         $this->withFragmentStub('parts/divider', 'post-src', ['VAR_DIVIDER_TEXT' => 'KONEC NOT']);
     }
 
+    /**
+     * Append a new part (segment) to the resulting template. Using same names for different segments should be avoided.
+     *
+     * @param string $name
+     * @param string $src
+     * @param string $key_major
+     * @param string $time_signature
+     * @param boolean $part_transpose
+     * @param array $hide_voices
+     * @return self
+     */
     public function withPart(string $name, string $src, 
                                 $key_major = 'c', string $time_signature = '4/4',
                                 $part_transpose = false, $hide_voices = []) : self
@@ -65,6 +85,12 @@ class LilypondPartsTemplate extends LilypondSrc
         return $this;
     }
 
+    /**
+     * Append an inline LilyPond code for every voice, such as { r2 } or { \bar "||" }.
+     *
+     * @param string $src
+     * @return self
+     */
     public function withInlineCode(string $src) : self
     {
         $this->withFragmentStub('parts/total_part_inline_lp', 'src', [
@@ -74,6 +100,12 @@ class LilypondPartsTemplate extends LilypondSrc
         return $this;
     }
 
+    /**
+     * Apply the render configuration to the global src object, so that it is available for each segment.
+     *
+     * @param LilypondSrc $global_src
+     * @return void
+     */
     protected function includeConfigInGlobalSrc(LilypondSrc $global_src) : void
     {
         $global_src->withFragmentStub('parts/global_config', 'header', [
