@@ -1,2 +1,2 @@
 
-Time = { \Time VAR_LILYPOND_CODE }
+Time = { #(if Time Time) VAR_LILYPOND_CODE }

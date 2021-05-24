@@ -81,11 +81,6 @@
   tagline = ##f
 }
 
-% this defines the Time property with an (empty) content, which plays
-% well with LilyPond's behaviour, namely:
-% Time = { \Time ... } can be used without an error
-Time = #(if Time Time)
-
 % use a dummy variable to reset the quarter-note default duration
 % this is useful when the user expects LilyPond's default behaviour
 % However.. it is always better to start the music expression with an explicit duration
