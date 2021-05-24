@@ -1,4 +1,6 @@
-% -------- tweak: redefines tiny notes' appearance
+%%%% Customization of tiny notes' appearance.
+%%%% Created by Filip Kratoš
+%%%% for ProScholy.cz
 
 teeny = {
   \set fontSize = #-3

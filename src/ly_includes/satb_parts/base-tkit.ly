@@ -2,7 +2,7 @@
 %%%% This file is part of LilyPond, the GNU music typesetter.
 %%%%
 %%%% Copyright (C) 2015--2021 Trevor Daniels <t.daniels@treda.co.uk>
-%%%% modified by Miroslav Sery
+%%%% Copyright (C) 2021 Miroslav Sery
 %%%% 
 %%%% LilyPond is free software: you can redistribute it and/or modify
 %%%% it under the terms of the GNU General Public License as published by
@@ -16,14 +16,6 @@
 %%%%
 %%%% You should have received a copy of the GNU General Public License
 %%%% along with LilyPond.  If not, see <http://www.gnu.org/licenses/>.
-
-%\version "2.19.22"
-
-%%% These are the general utility functions and storage
-%   used by the built-in templates and the template kits
-%   (tkits) supporting them.
-
-% TODO: these may be more sensibly (re)defined as a scm file
 
 #(define (get-id str)
    "Return the identifier with the value str"
@@ -102,8 +94,6 @@
   (or (member x lyrics-postfixes)
       (member x lyrics-names)))
 
-%(ly:message (cartesian (list global-prefix) prefixes)) %
-
 #(define (set-music-definitions! prefixes lyr-postfixes lyr-names)
   "Populate the name definitions and their derivatives
    with the values provided by the calling template"
@@ -143,6 +133,7 @@
                                   variable-names) #t))
 
 #(define (hide-voices! prefixes lyrics-postfixes)
+  "Apply the -Hide prefixing functionality, e.g., clear the solo variable if soloHide = ##t"
   (for-each (lambda (voice-prefix)
       (define should-hide (make-id voice-prefix "Hide"))
       (define all-voice-variables (cartesian (list voice-prefix) (append lyrics-postfixes '(""))))

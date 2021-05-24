@@ -2,8 +2,6 @@
 %% see also http://lsr.di.unimi.it/LSR/Item?u=1&id=545
 %% version 2014/03/24
 
-%% Modified by Miroslav Sery for https://github.com/proscholy
-
 #(define (noteEvent? music)
 (eq? (ly:music-property music 'name) 'NoteEvent))
 
@@ -70,6 +68,7 @@
            (else (and (ly:music-property x 'duration #f) x)))) ; #f means : go deeper
      (expand-q-chords music))))
 
+%% Copyright (C) 2021 Miroslav Sery for https://github.com/proscholy
 
 #(define (tiny-tweak-recursive new-font-size music)
   (let ((es (ly:music-property music 'elements))

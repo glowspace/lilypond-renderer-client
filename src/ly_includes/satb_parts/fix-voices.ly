@@ -1,4 +1,9 @@
+%%%% Methods for fixing issues with segment concatenation
+%%%% Created by Miroslav Sery
+%%%% for ProScholy.cz
+
 #(define (fix-voice-lyric! id placeholderMusic)
+  "Fix a lyric variable by inserting placeholder data"
   (define sym (string->symbol id))
   (define val (get-id id))
     (if (ly:music? val)
@@ -7,7 +12,7 @@
 
 #(define (placehold-voices-and-lyrics! placeholderMusic voice-prefixes)
   "Fix voices and their lyrics behaviour with placeholder music.
-  Note that for lyrics we need to use unfoldrepeats to fix behaviour with repeats"
+  Note that for lyrics we need to filter out problematic data types"
   (let 
     ((lyricsPlaceholder (make-sequential-music (extract-named-music placeholderMusic (list 'NoteEvent 'RestEvent 'EventChord 'SkipEvent 'TimeScaledMusic))))) ;; in particular, do not copy 'ContextSpeccedMusic
     (for-each

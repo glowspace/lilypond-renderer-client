@@ -1,3 +1,4 @@
+%% Copyright (C) 2021 Miroslav Sery for https://github.com/proscholy
 
 vynech = #(define-music-function (parser location music) (ly:music? )
 (map-some-music 

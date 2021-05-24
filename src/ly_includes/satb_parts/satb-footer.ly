@@ -1,3 +1,7 @@
+%%%% The score's "footer" which renders the concatenated score in totalScoreObject.
+%%%% Created by Miroslav Sery
+%%%% for ProScholy.cz
+
 #(define-missing-variables! '("globalTransposeRelativeC") #f)
 
 #(if (not globalTransposeRelativeC)
@@ -5,7 +9,6 @@
 
 % when Time = ... is at the end (e.g. setting bars)
 totalScoreObject = #(if Time #{ { \totalScoreObject \Time } #} totalScoreObject)
-
 totalScoreObject = \transpose c \globalTransposeRelativeC \totalScoreObject
 
 \tagGroup #'(print play)

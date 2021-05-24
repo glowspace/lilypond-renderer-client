@@ -16,7 +16,7 @@
 %%%% You should have received a copy of the GNU General Public License
 %%%% along with LilyPond.  If not, see <http://www.gnu.org/licenses/>.
 
-%\version "2.19.22"
+%%%% NOTE - THIS FILE IS CURRENTLY NOT USED, BUT KEPT FOR LEGACY
 
 \include "staff-tkit.ly"
 

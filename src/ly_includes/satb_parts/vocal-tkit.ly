@@ -102,20 +102,10 @@ The number of stanzas is determined by the number of populated verse names.
      lowerName lowerClef v3name v4name #t))))
 
 
+%% Copyright (C) 2021 Miroslav Sery for https://github.com/proscholy
+
 make-one-voice-vocal-staff-fixed =
 #(define-music-function (name clef)
   (voice-prefix? string?)
     (make-two-voice-vocal-staff name clef name "empty" #f))
-
-  % (make-two-vocal-staves-with-stanzas
-  %   name clef "empty" clef
-  %   "empty" name "empty" "empty" satb-lyrics-variable-names))
-
-  %  (make-simultaneous-music
-  %  (list
-  %   (make-two-voice-vocal-staff
-  %    name clef "empty" name)
-  %   (make-two-voice-vocal-staff
-  %    name clef "empty" name))))
-
 

@@ -1,3 +1,8 @@
+%%%% Customization of chords' appearance.
+%%%% Created by Miroslav Sery and Filip Kratoš
+%%%% for ProScholy.cz
+
+
 flatSign = #(alteration->text-accidental-markup FLAT)
 sharpSign = #(alteration->text-accidental-markup SHARP)
 
@@ -63,7 +68,7 @@ chExceptions = #(append
     \ChordNames {
       \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.padding = #0.7
       \set chordRootNamer = #MyChordNames
-      \set majorSevenSymbol = \markup { maj }		% mění zobrazení maj akordů
+      \set majorSevenSymbol = \markup { maj }
       \set additionalPitchPrefix = #"add"
       \set chordNameExceptions = #chExceptions
     }

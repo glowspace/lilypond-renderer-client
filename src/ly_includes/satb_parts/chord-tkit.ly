@@ -2,7 +2,7 @@
 %%%% This file is part of LilyPond, the GNU music typesetter.
 %%%%
 %%%% Copyright (C) 2015--2021 Trevor Daniels <t.daniels@treda.co.uk>
-%%%% modified by Miroslav Sery
+%%%% Copyright (C) 2021 Miroslav Sery
 %%%%
 %%%% LilyPond is free software: you can redistribute it and/or modify
 %%%% it under the terms of the GNU General Public License as published by
@@ -16,8 +16,6 @@
 %%%%
 %%%% You should have received a copy of the GNU General Public License
 %%%% along with LilyPond.  If not, see <http://www.gnu.org/licenses/>.
-
-%\version "2.19.22"
 
 \include "base-tkit.ly"
 

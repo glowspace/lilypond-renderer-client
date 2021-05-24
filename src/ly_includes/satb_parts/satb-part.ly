@@ -1,4 +1,21 @@
-% defined in satb_header.ly
+%%%% Template toolkit
+%%%% This file is part of LilyPond, the GNU music typesetter.
+%%%%
+%%%% Copyright (C) 2015--2021 Trevor Daniels <t.daniels@treda.co.uk>
+%%%% Copyright (C) 2021 Miroslav Sery
+%%%%
+%%%% LilyPond is free software: you can redistribute it and/or modify
+%%%% it under the terms of the GNU General Public License as published by
+%%%% the Free Software Foundation, either version 3 of the License, or
+%%%% (at your option) any later version.
+%%%%
+%%%% LilyPond is distributed in the hope that it will be useful,
+%%%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%%%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%%%% GNU General Public License for more details.
+%%%%
+%%%% You should have received a copy of the GNU General Public License
+%%%% along with LilyPond.  If not, see <http://www.gnu.org/licenses/>.
 
 #(set-music-definitions!
   (append satb-voice-prefixes satb-voice-prefixes-extra)
@@ -10,9 +27,6 @@
   satb-lyrics-postfixes)
 
 someMusic = ##f
-
-% this is probably not necessary
-% we can use #(placehold-voices-and-lyrics! with the voice directly
 #(if solo (set! someMusic solo))
 #(if (and (not someMusic) sopran)
       (set! someMusic sopran))
@@ -26,7 +40,6 @@ someMusic = ##f
       (set! someMusic bas))
 #(if (and (not someMusic) muzi)
       (set! someMusic muzi))
-
 
 #(if someMusic (placehold-voices-and-lyrics! someMusic satb-voice-prefixes))
 
@@ -90,6 +103,7 @@ keyNotChanged = #(and lastTransposedKeyMajor (equal?
 #(set! lastTransposedKeyMajor transposedEndKeyMajor)
 
 
+% handle the soloMale functionality
 #(if (and soloMale solo)
       (set! solo #{ \addNoteSmall -2 \solo \soloMale #}))
 

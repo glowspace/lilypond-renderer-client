@@ -2,6 +2,7 @@
 %%%% This file is part of LilyPond, the GNU music typesetter.
 %%%%
 %%%% Copyright (C) 2015--2021 Trevor Daniels <t.daniels@treda.co.uk>
+%%%% Copyright (C) 2021 Miroslav Sery
 %%%%
 %%%% LilyPond is free software: you can redistribute it and/or modify
 %%%% it under the terms of the GNU General Public License as published by
@@ -15,11 +16,6 @@
 %%%%
 %%%% You should have received a copy of the GNU General Public License
 %%%% along with LilyPond.  If not, see <http://www.gnu.org/licenses/>.
-
-%\version "2.19.22"
-
-%%% The function used by the built-in templates to
-%   build a lyrics context and associate it with a voice.
 
 \include "voice-tkit.ly"
 
