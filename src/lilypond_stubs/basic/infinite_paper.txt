@@ -1,9 +1,10 @@
 
-#(set! paper-alist (cons '("my size" . (cons (* VAR_WIDTH_MM mm) (* 3000 in))) paper-alist))
+#(set! paper-alist (cons '("my size" . (cons (* VAR_WIDTH_MM mm) (* 1 in))) paper-alist))
 \paper {
   #(set-paper-size "my size")
   indent = 0
   top-margin = 1
+  page-breaking = #ly:one-page-breaking 
 }
 
 % disable footer 
