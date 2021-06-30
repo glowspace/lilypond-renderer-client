@@ -17,19 +17,20 @@ class Client
      */
     public function __construct(?string $host = null, ?string $port = null)
     {
-        if (!function_exists('config')) {
-            if (is_null($host) || is_null($port)) {
-                throw new Exception('Both $host and $port variable need to be defined when no config (Laravel) is available.');
-            }
-
-            $this->client = new HttpClient([
-                'base_uri' => $host . ':' . $port
-            ]);
-        } else {
-            $this->client = new HttpClient([
-                'base_uri' => config('lilypond_renderer.host') . ':' . config('lilypond_renderer.port')
-            ]);
+        $host = $host ?? config('lilypond_renderer.host');
+        $port = $port ?? config('lilypond_renderer.port');
+        if (is_null($host)) {
+            throw new Exception('The $host variable needs to be defined when no config (Laravel) is available.');
         }
+
+        $base_url = $host;
+        if (!empty($port)) {
+            $base_url .= ':' . $port;
+        }
+
+        $this->client = new HttpClient([
+            'base_uri' => $base_url
+        ]);
     }
 
     /**
