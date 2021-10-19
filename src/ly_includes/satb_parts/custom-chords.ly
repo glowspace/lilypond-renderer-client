@@ -13,7 +13,12 @@ chExceptionMusic = {
   <c es ges beses>-\markup { "dim" \super 7 }
   <c es ges bes>-\markup { m \super { "7 " \flatSign 5}} 
   <c e gis b>-\markup { + \super maj } 
-
+  
+  % fix sus2 to 2
+  <c d g>-\markup { \super { "2" } }
+  % fix sus4 to 4
+  <c f g>-\markup { \super { "4" } }
+  
   % fix 7#11 to add9 #11
   <c es g bes d' fis'>-\markup { m \super { "add9 " \sharpSign 11 }}
   <c e g bes d' fis'>-\markup { \super { "add9 " \sharpSign 11 }}
