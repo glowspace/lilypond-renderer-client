@@ -1,3 +1,6 @@
+This library provides a PHP link to creating (unified) scores in LilyPond.
+It supports generic LilyPond source code input, as well as a sophisticated custom template.
+
 # Requirements
 
 This package needs a running [Lilypond renderer server](https://github.com/proscholy/lilypond-renderer-server).
@@ -40,9 +43,6 @@ So, ensure this has been running and composer is installed.
 Then, unit tests can be executed with `./vendor/bin/phpunit`.
 
 # Documentation
-
-This library provides a PHP link to creating (unified) scores in LilyPond.
-It supports generic LilyPond source code input, as well as a sophisticated custom template.
 
 ## Usage example
 
