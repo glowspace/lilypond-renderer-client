@@ -24,7 +24,6 @@ class LilypondPartsTemplateTest extends TestCase
         $this->assertStringContainsString('\include "satb_parts/satb-footer.ly"', $srcStr);
 
         $this->assertContains('global.ily', array_keys($src->getIncludeFilesString()));
-        $this->assertContains('satb_parts/base-tkit.ly', array_keys($src->getIncludeFiles()));
         $this->assertStringContainsString('globalProperty = { c }', $src->getIncludeFilesString()['global.ily']);
         $this->assertStringContainsString('\layout { \context { \Staff \consists "Merge_rests_engraver" } }', $src->getIncludeFilesString()['global.ily']);
         $this->assertStringContainsString('font = #"amiri"', $src->getIncludeFilesString()['global.ily']);
