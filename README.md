@@ -7,7 +7,9 @@ This package needs a running [Lilypond renderer server](https://github.com/prosc
 
 # Installing the package
 
-Add following to your composer.json and then run `composer update`.
+This package requires `php-xml` and `php-curl` extensions (can be installed via apt install).
+
+Add following to your composer.json and then run `composer update`. 
 
 ~~~
 "require": {
