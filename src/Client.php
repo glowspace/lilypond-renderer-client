@@ -4,6 +4,7 @@ namespace ProScholy\LilypondRenderer;
 
 use GuzzleHttp\Client as HttpClient;
 use Exception;
+use ProScholy\LilypondRenderer\InputFileType;
 
 class Client
 {
@@ -41,15 +42,22 @@ class Client
      * @param boolean $zip
      * @return RenderResult
      */
-    private function make(string $recipe, string $contents, bool $is_zip = false) : RenderResult
+    private function make(string $recipe, string $contents, InputFileType $input_t = InputFileType::LilypondSimple) : RenderResult
     {
+        $name = 'file_lilypond';
+        if ($input_t == InputFileType::LilypondZip) {
+            $name = 'file_zip';
+        } else if ($input_t == InputFileType::MusicXML) {
+            $name = 'file_xml';
+        }
+
         // todo: throw custom exceptions
         $response = $this->client->post("make?recipe=$recipe", [
             'multipart' => [
                 [
-                    'name'     => $is_zip ? 'file_zip' : 'file_lilypond', // input name, needs to stay the same
+                    'name'     => $name,
                     'contents' => $contents,
-                    'filename' => $is_zip ? 'score.zip' : 'score.ly' // doesn't matter
+                    'filename' => 'score' // can be arbitrary
                 ]
             ]
         ]);
@@ -58,19 +66,19 @@ class Client
     }
 
     /**
-     *  Render the $lilypond_src with a given $recipe, decides automatically whether to use a zip file or textual file.
+     *  Render the $src with a given $recipe, decides automatically whether to use a zip file or textual file.
      *
-     * @param string|LilypondSrc $lilypond_src
+     * @param string|LilypondSrc $src
      * @param string $recipe
      * @return RenderResult
      */
-    public function render($lilypond_src, string $recipe) : RenderResult
+    public function render($src, string $recipe) : RenderResult
     {
-        if ($lilypond_src instanceof LilypondSrc && $lilypond_src->hasIncludes()) {
-            return $this->renderZip($lilypond_src, $recipe);
+        if ($src instanceof LilypondSrc && $src->hasIncludes()) {
+            return $this->renderZip($src, $recipe);
         }
 
-        return $this->make($recipe, (string)$lilypond_src);
+        return $this->make($recipe, (string)$src);
     }
 
     /**
@@ -86,7 +94,7 @@ class Client
         $contents = stream_get_contents($zipStream);
 
         // obtain the result of the `make` request and close the memory stream
-        $result = $this->make($recipe, $contents, true);
+        $result = $this->make($recipe, $contents, InputFileType::LilypondZip);
         fclose($zipStream);
         return $result;
     }
@@ -101,6 +109,11 @@ class Client
     public function renderSvg($lilypond_src, $crop = true) : RenderResult
     {
         return $this->render($lilypond_src, $crop ? 'svgopt' : 'svg');
+    }
+
+    public function renderXml(string $src) : RenderResult
+    {
+        return $this->make('svgxml', $src, InputFileType::MusicXML);
     }
 
     /**

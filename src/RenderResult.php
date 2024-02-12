@@ -21,7 +21,8 @@ class RenderResult
         'pdf' => 'score.pdf',
         'pdfcrop' => 'score_cropped.pdf',
         'pngcrop' => 'score_cropped.png',
-        'svgcropcurves' => 'score_cropped_curves.svg'
+        'svgcropcurves' => 'score_cropped_curves.svg',
+        'svgxml' => 'score_mxml.svg',
     ];
 
     /**
