@@ -207,10 +207,8 @@ class LilypondRendererClientTest extends TestCase
         $xml = file_get_contents(__DIR__ . '/test.xml');
         $res = $this->client->renderXml($xml);
 
-        var_dump($res);
         $this->assertIsString($res->getTmp());
         $this->assertIsArray($res->getContents());
         $this->assertTrue($res->isSuccessful());
-
     }
 }
