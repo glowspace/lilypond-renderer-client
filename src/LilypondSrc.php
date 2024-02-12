@@ -171,10 +171,7 @@ class LilypondSrc implements Stringable
     {
         $tempStream = fopen('php://temp', 'rw');
 
-        // setup the zipping things
-        $zipStreamOptions = new Archive();
-        $zipStreamOptions->setOutputStream($tempStream);
-        $zipStream = new ZipStream('score.zip', $zipStreamOptions); 
+        $zipStream = new ZipStream(outputStream:$tempStream, sendHttpHeaders:false); 
 
         // include the main src and the other files
         $zipStream->addFile("score.ly", (string)$this);
