@@ -203,12 +203,21 @@ class LilypondRendererClientTest extends TestCase
     }
 
     public function testMusicXml() {
-        // read test.xml
         $xml = file_get_contents(__DIR__ . '/test.xml');
         $res = $this->client->renderXml($xml);
 
         $this->assertIsString($res->getTmp());
         $this->assertIsArray($res->getContents());
         $this->assertTrue($res->isSuccessful());
+    }
+
+    public function testMusicXmlWithChords() {
+        $xml = file_get_contents(__DIR__ . '/test_chords.xml');
+        $res = $this->client->renderXml($xml);
+
+        $this->assertTrue($res->isSuccessful());
+        $data = $this->client->getResultOutputFile($res);
+
+        file_put_contents('logs/test_chords.svg', $data);
     }
 }
