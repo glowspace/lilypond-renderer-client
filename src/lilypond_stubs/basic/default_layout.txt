@@ -4,20 +4,20 @@ fontSize = VAR_FONT_SIZE
 chordFontSize = VAR_CHORD_FONT_SIZE
 
 showMelodie = ##f
-#(if melodie (set! showMelodie #t))
+#(if (defined? 'melodie) (set! showMelodie #t))
 
 showChords = ##f
-#(if akordy (set! showChords #t))
+#(if (defined? 'akordy) (set! showChords #t))
 
 melodie = \relative {
   \key \originalKey \major
-  #(if alt #{ { \voiceOne } #}) 
+  #(if (defined? 'alt) #{ { \voiceOne } #}) 
 	#(if showMelodie #{ { \melodie } #}) 
 }
 
 alt = \relative {
-  #(if showMelodie #{ { \voiceTwo } #}) 
-  #(if alt #{ { \alt } #}) 
+  #(if (defined? 'showMelodie) #{ { \voiceTwo } #}) 
+  #(if (defined? 'alt) #{ { \alt } #}) 
 }
  
 \score { \transpose \originalKey \targetKey
@@ -29,8 +29,8 @@ alt = \relative {
 					\new Voice = "two" {  \alt }
 				>>
 		 }
-    #(if text #{ \new Lyrics \lyricsto "one" \text  #})
-		#(if textAlt #{ \new Lyrics \lyricsto "two" \textAlt  #})
+    #(if (defined? 'text) #{ \new Lyrics \lyricsto "one" \text  #})
+		#(if (defined? 'textAlt) #{ \new Lyrics \lyricsto "two" \textAlt  #})
   >>
 }
 
