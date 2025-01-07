@@ -190,7 +190,12 @@ class LilypondRendererClientTest extends TestCase
         $this->assertIsString($res->getTmp());
         $this->assertIsArray($res->getContents());
 
-        file_put_contents('logs/score.zip', $src->getZippedSrcStream());
+        $data = $this->client->getResultOutputFile($res);
+        $log = $this->client->getResultLog($res);
+
+        file_put_contents('logs/lp_score.zip', $src->getZippedSrcStream());
+        file_put_contents('logs/lp_score.svg', $data);
+        file_put_contents('logs/lp_score_log.txt', $log);
     }
 
     public function testBasicLilypondPdf()
@@ -218,6 +223,6 @@ class LilypondRendererClientTest extends TestCase
         $this->assertTrue($res->isSuccessful());
         $data = $this->client->getResultOutputFile($res);
 
-        file_put_contents('logs/test_chords.svg', $data);
+        file_put_contents('logs/verovio_test_chords.svg', $data);
     }
 }
